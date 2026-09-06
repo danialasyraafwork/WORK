@@ -1,4 +1,4 @@
-name: Build Candy Craze PNG images
+name: Finalize Candy Craze direct package images
 
 on:
   push:
@@ -11,7 +11,7 @@ permissions:
   contents: write
 
 jobs:
-  build-png-images:
+  finalize-direct-images:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Candy Craze branch
@@ -19,38 +19,28 @@ jobs:
         with:
           ref: candy-craze-website-preview
 
-      - name: Install image tools
-        run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y -qq imagemagick
-
-      - name: Build clearer PNG package photos
+      - name: Remove old image loader and bust image CSS cache
         shell: bash
         run: |
           set -euo pipefail
-          identify assets/packages/basic.webp assets/packages/standard.webp assets/packages/popular.webp assets/packages/premium.webp
-          for name in basic standard popular premium; do
-            convert "assets/packages/${name}.webp" \
-              -filter Lanczos \
-              -resize 200% \
-              -unsharp 0x0.75+0.75+0.008 \
-              -colorspace sRGB \
-              -define png:compression-level=9 \
-              "assets/packages/${name}.png"
-          done
-          identify assets/packages/basic.png assets/packages/standard.png assets/packages/popular.png assets/packages/premium.png
-          ls -lh assets/packages/basic.png assets/packages/standard.png assets/packages/popular.png assets/packages/premium.png
+          perl -0pi -e 's#\n  <script src="package-image-loader\.js\?v=1" defer></script>##g' index.html
+          perl -pi -e 's/visual-booking\.css\?v=2/visual-booking.css?v=3/g' index.html
+          grep -q 'visual-booking.css?v=3' index.html
+          if grep -q 'package-image-loader.js' index.html; then
+            echo 'Old package image loader is still present' >&2
+            exit 1
+          fi
+          grep -q "assets/packages/basic.png" visual-booking.css
+          grep -q "assets/packages/standard.png" visual-booking.css
+          grep -q "assets/packages/popular.png" visual-booking.css
+          grep -q "assets/packages/premium.png" visual-booking.css
 
-      - name: Point the site to PNG package images
-        shell: bash
-        run: |
-          perl -pi -e "s/assets\/packages\/basic\.webp/assets\/packages\/basic.png/g; s/assets\/packages\/standard\.webp/assets\/packages\/standard.png/g; s/assets\/packages\/popular\.webp/assets\/packages\/popular.png/g; s/assets\/packages\/premium\.webp/assets\/packages\/premium.png/g" visual-booking.css
-
-      - name: Commit PNG images
+      - name: Commit direct image setup
         shell: bash
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add assets/packages/basic.png assets/packages/standard.png assets/packages/popular.png assets/packages/premium.png visual-booking.css
-          git commit -m "Use clearer PNG Candy Craze package photos [skip ci]"
+          git add index.html visual-booking.css
+          git diff --cached --quiet && exit 0
+          git commit -m "Use direct Candy Craze package images [skip ci]"
           git push origin HEAD:candy-craze-website-preview
