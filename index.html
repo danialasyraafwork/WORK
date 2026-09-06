@@ -33,7 +33,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=4">
+  <link rel="stylesheet" href="styles.css?v=5">
 
   <script type="application/ld+json">
   {
@@ -45,15 +45,8 @@
         "name":"Candy Craze",
         "url":"https://candycraze.dansglobalempire.com/",
         "telephone":"+601139376728",
-        "parentOrganization":{
-          "@type":"Organization",
-          "name":"DANS Global Empire",
-          "url":"https://dansglobalempire.com/"
-        },
-        "sameAs":[
-          "https://www.instagram.com/eminents.candycraze/",
-          "https://www.tiktok.com/@eminents.candycraze"
-        ]
+        "parentOrganization":{"@type":"Organization","name":"DANS Global Empire","url":"https://dansglobalempire.com/"},
+        "sameAs":["https://www.instagram.com/eminents.candycraze/","https://www.tiktok.com/@eminents.candycraze"]
       },
       {
         "@type":"WebSite",
@@ -96,7 +89,7 @@
           {"@type":"Question","name":"Which Candy Craze packages include candies and snacks?","acceptedAnswer":{"@type":"Answer","text":"Popular Craze includes 6 candies and 3 snacks. Premium Craze includes 9 candies and 3 snacks. Selections are random and subject to availability."}},
           {"@type":"Question","name":"Can I choose the add-on candy or snack brands?","acceptedAnswer":{"@type":"Answer","text":"No. Add-ons are available only for Popular Craze and Premium Craze. Customers choose the quantity bundle while Candy Craze provides a random assortment based on available stock."}},
           {"@type":"Question","name":"Is delivery free?","acceptedAnswer":{"@type":"Answer","text":"Free delivery is available within 10km."}},
-          {"@type":"Question","name":"How do I book Candy Craze?","acceptedAnswer":{"@type":"Answer","text":"Choose a package, select eligible add-ons if required, enter the event date and location, then send the pre-filled booking enquiry through WhatsApp."}}
+          {"@type":"Question","name":"How do I book Candy Craze?","acceptedAnswer":{"@type":"Answer","text":"Choose a package visually, select eligible add-ons if required, enter the event date and location, then send the pre-filled booking enquiry through WhatsApp."}}
         ]
       }
     ]
@@ -142,19 +135,12 @@
           </div>
         </div>
 
-        <div class="hero-visual reveal" aria-label="Decorative Candy Craze candy wall illustration">
-          <div class="soft-orb orb-one"></div><div class="soft-orb orb-two"></div>
-          <div class="visual-card">
-            <div class="visual-topline"><span>THE SWEET CORNER</span><span>✦</span></div>
-            <div class="candy-wall">
-              <div class="wall-sign">Candy<br><em>Craze</em></div>
-              <div class="jar-row"><div class="jar j1"><span></span><span></span><span></span></div><div class="jar j2"><span></span><span></span><span></span></div><div class="jar j3"><span></span><span></span><span></span></div></div>
-              <div class="jar-row lower"><div class="jar j4"><span></span><span></span><span></span></div><div class="jar j5"><span></span><span></span><span></span></div><div class="jar j6"><span></span><span></span><span></span></div></div>
-              <div class="stand-line"></div>
-            </div>
-            <div class="visual-note"><span>Styled with love</span><strong>for your celebration.</strong></div>
+        <div class="hero-visual reveal">
+          <div class="hero-photo-frame">
+            <div class="package-photo premium-photo hero-photo" role="img" aria-label="Premium Craze candy wall setup with candies, snacks and 3-tier rack"></div>
+            <div class="hero-photo-label"><span>Premium Craze</span><strong>Full setup · RM360</strong></div>
           </div>
-          <div class="floating-pill pill-a">50 paper cups included</div>
+          <div class="floating-pill pill-a">Real package preview</div>
           <div class="floating-pill pill-b">Setup included</div>
         </div>
       </div>
@@ -164,32 +150,47 @@
 
     <section class="packages section-pad" id="packages" aria-labelledby="packages-title">
       <div class="shell">
-        <div class="section-heading reveal"><span class="eyebrow">Candy wall package prices</span><h2 id="packages-title">Four ways to make it sweet.</h2><p>Choose a simple candy wall setup or a ready-filled package with random candies and snacks.</p></div>
+        <div class="section-heading reveal"><span class="eyebrow">See what you are booking</span><h2 id="packages-title">Four packages. Four clear setups.</h2><p>Every package now has its own visual preview, so you can compare the setup before choosing.</p></div>
         <div class="package-grid">
           <article class="package-card reveal">
-            <div class="package-head"><div><span class="package-kicker">Simple setup</span><h3>Basic Craze</h3></div><div class="price"><small>RM</small>80</div></div>
-            <ul class="feature-list"><li>1 candy wall + 9 boxes</li><li>No candies & snacks</li><li>Free 50 paper cups</li><li>Free installation</li><li>Minimal decoration</li></ul>
-            <button class="select-package" type="button" data-package="Basic Craze — RM80">Choose Basic</button>
+            <div class="package-photo basic-photo package-card-photo" role="img" aria-label="Basic Craze candy wall setup without candies or snacks"></div>
+            <div class="package-body">
+              <div class="package-head"><div><span class="package-kicker">Setup only</span><h3>Basic Craze</h3></div><div class="price"><small>RM</small>80</div></div>
+              <ul class="feature-list"><li>1 candy wall + 9 boxes</li><li>No candies & snacks</li><li>Free 50 paper cups</li><li>Free installation</li><li>Minimal decoration</li></ul>
+              <button class="select-package" type="button" data-package="Basic Craze — RM80">Choose Basic</button>
+            </div>
           </article>
+
           <article class="package-card reveal">
-            <div class="package-head"><div><span class="package-kicker">Extra display</span><h3>Standard Craze</h3></div><div class="price"><small>RM</small>110</div></div>
-            <ul class="feature-list"><li>1 candy wall + 9 boxes</li><li>3-tier rack</li><li>No candies & snacks</li><li>Free 50 paper cups</li><li>Free installation</li><li>Minimal decoration</li></ul>
-            <button class="select-package" type="button" data-package="Standard Craze — RM110">Choose Standard</button>
+            <div class="package-photo standard-photo package-card-photo" role="img" aria-label="Standard Craze candy wall setup with 3-tier rack"></div>
+            <div class="package-body">
+              <div class="package-head"><div><span class="package-kicker">Setup + rack</span><h3>Standard Craze</h3></div><div class="price"><small>RM</small>110</div></div>
+              <ul class="feature-list"><li>1 candy wall + 9 boxes</li><li>3-tier rack</li><li>No candies & snacks</li><li>Free 50 paper cups</li><li>Free installation</li><li>Minimal decoration</li></ul>
+              <button class="select-package" type="button" data-package="Standard Craze — RM110">Choose Standard</button>
+            </div>
           </article>
+
           <article class="package-card featured reveal">
-            <div class="package-badge">Sweet-filled option</div>
-            <div class="package-head"><div><span class="package-kicker">Candy included</span><h3>Popular Craze</h3></div><div class="price"><small>RM</small>260</div></div>
-            <ul class="feature-list"><li>1 candy wall + 9 boxes</li><li>6 random candies + 3 random snacks</li><li>Free 50 paper cups</li><li>Free installation</li><li>Minimal decoration</li><li>Eligible for treat add-ons</li></ul>
-            <button class="select-package" type="button" data-package="Popular Craze — RM260">Choose Popular</button>
+            <div class="package-badge">Candy included</div>
+            <div class="package-photo popular-photo package-card-photo" role="img" aria-label="Popular Craze candy wall setup filled with random candies and snacks"></div>
+            <div class="package-body">
+              <div class="package-head"><div><span class="package-kicker">Ready-filled setup</span><h3>Popular Craze</h3></div><div class="price"><small>RM</small>260</div></div>
+              <ul class="feature-list"><li>1 candy wall + 9 boxes</li><li>6 random candies + 3 random snacks</li><li>Free 50 paper cups</li><li>Free installation</li><li>Minimal decoration</li><li>Eligible for treat add-ons</li></ul>
+              <button class="select-package" type="button" data-package="Popular Craze — RM260">Choose Popular</button>
+            </div>
           </article>
+
           <article class="package-card premium reveal">
             <div class="package-badge">Full setup</div>
-            <div class="package-head"><div><span class="package-kicker">More treats + display</span><h3>Premium Craze</h3></div><div class="price"><small>RM</small>360</div></div>
-            <ul class="feature-list"><li>1 candy wall + 9 boxes</li><li>3-tier rack</li><li>9 random candies + 3 random snacks</li><li>Free 50 paper cups</li><li>Free installation</li><li>Minimal decoration</li><li>Eligible for treat add-ons</li></ul>
-            <button class="select-package" type="button" data-package="Premium Craze — RM360">Choose Premium</button>
+            <div class="package-photo premium-photo package-card-photo" role="img" aria-label="Premium Craze candy wall setup filled with random candies and snacks plus 3-tier rack"></div>
+            <div class="package-body">
+              <div class="package-head"><div><span class="package-kicker">More treats + rack</span><h3>Premium Craze</h3></div><div class="price"><small>RM</small>360</div></div>
+              <ul class="feature-list"><li>1 candy wall + 9 boxes</li><li>3-tier rack</li><li>9 random candies + 3 random snacks</li><li>Free 50 paper cups</li><li>Free installation</li><li>Minimal decoration</li><li>Eligible for treat add-ons</li></ul>
+              <button class="select-package" type="button" data-package="Premium Craze — RM360">Choose Premium</button>
+            </div>
           </article>
         </div>
-        <p class="package-note reveal">Candy and snack selections for Popular Craze and Premium Craze are random and subject to stock availability. <strong>Free delivery within 10km.</strong></p>
+        <p class="package-note reveal">Images are visual references for each package setup. Candy and snack selections for Popular Craze and Premium Craze are random and subject to stock availability. <strong>Free delivery within 10km.</strong></p>
       </div>
     </section>
 
@@ -217,7 +218,7 @@
       </div>
     </section>
 
-    <section class="process section-pad" aria-labelledby="process-title"><div class="shell"><div class="section-heading reveal"><span class="eyebrow">Easy booking flow</span><h2 id="process-title">Pick. Message. Celebrate.</h2></div><div class="process-grid"><div class="process-step reveal"><span>1</span><h3>Choose your package</h3><p>Pick Basic, Standard, Popular or Premium.</p></div><div class="process-step reveal"><span>2</span><h3>Add extra treats</h3><p>If you choose Popular or Premium, add an eligible random treat bundle if needed.</p></div><div class="process-step reveal"><span>3</span><h3>WhatsApp your enquiry</h3><p>Enter your event details and send the ready-made message to Candy Craze.</p></div></div></div></section>
+    <section class="process section-pad" aria-labelledby="process-title"><div class="shell"><div class="section-heading reveal"><span class="eyebrow">Easy booking flow</span><h2 id="process-title">See it. Pick it. Message us.</h2></div><div class="process-grid"><div class="process-step reveal"><span>1</span><h3>Compare the visuals</h3><p>See exactly which setup belongs to Basic, Standard, Popular and Premium.</p></div><div class="process-step reveal"><span>2</span><h3>Tap your package</h3><p>The booking form shows your selected package, details and eligible add-ons.</p></div><div class="process-step reveal"><span>3</span><h3>WhatsApp your enquiry</h3><p>Enter your event date and location, then send the ready-made message.</p></div></div></div></section>
 
     <section class="faq section-pad" id="faq" aria-labelledby="faq-title">
       <div class="shell faq-grid">
@@ -229,24 +230,71 @@
           <details><summary>Can I choose the add-on candy or snack brands?</summary><p>No. Add-ons are only for Popular Craze and Premium Craze. You choose the quantity bundle while Candy Craze selects the actual brands randomly based on available stock.</p></details>
           <details><summary>Which packages include the 3-tier rack?</summary><p>Standard Craze and Premium Craze include the 3-tier rack.</p></details>
           <details><summary>Is delivery free?</summary><p>Free delivery is available within 10km.</p></details>
-          <details><summary>How do I book?</summary><p>Choose your package, select eligible add-ons if required, fill in your event date and location, then tap “Send via WhatsApp”.</p></details>
+          <details><summary>How do I book?</summary><p>Tap one of the four visual package choices, select eligible add-ons if required, fill in your event date and location, then tap “Send via WhatsApp”.</p></details>
         </div>
       </div>
     </section>
 
     <section class="booking section-pad" id="booking" aria-labelledby="booking-title">
       <div class="shell booking-card reveal">
-        <div class="booking-copy"><span class="eyebrow light">Ready when you are</span><h2 id="booking-title">Book your Candy Craze setup.</h2><p>Fill in your event details and we’ll open WhatsApp with the enquiry ready to send.</p><p class="delivery-note"><strong>Free delivery within 10km.</strong></p><div class="social-links"><a href="https://www.instagram.com/eminents.candycraze/" target="_blank" rel="noopener noreferrer">Instagram <strong>@eminents.candycraze</strong></a><a href="https://www.tiktok.com/@eminents.candycraze" target="_blank" rel="noopener noreferrer">TikTok <strong>@eminents.candycraze</strong></a></div></div>
+        <div class="booking-copy">
+          <span class="eyebrow light">Ready when you are</span>
+          <h2 id="booking-title">Book the setup you can actually see.</h2>
+          <p>Tap a package photo, check the selected setup and details, then fill in your event information.</p>
+          <p class="delivery-note"><strong>Free delivery within 10km.</strong></p>
+          <div class="social-links"><a href="https://www.instagram.com/eminents.candycraze/" target="_blank" rel="noopener noreferrer">Instagram <strong>@eminents.candycraze</strong></a><a href="https://www.tiktok.com/@eminents.candycraze" target="_blank" rel="noopener noreferrer">TikTok <strong>@eminents.candycraze</strong></a></div>
+        </div>
+
         <form class="booking-form" id="bookingForm">
-          <label for="customerName">Your name</label><input type="text" id="customerName" placeholder="e.g. Aina" autocomplete="name" required>
-          <label for="packageSelect">Package</label><select id="packageSelect" required><option value="">Choose a package</option><option>Basic Craze — RM80</option><option>Standard Craze — RM110</option><option>Popular Craze — RM260</option><option>Premium Craze — RM360</option></select>
+          <label for="customerName">Your name</label>
+          <input type="text" id="customerName" placeholder="e.g. Aina" autocomplete="name" required>
+
+          <div class="booking-package-head">
+            <div><span class="booking-step">Step 1</span><strong>Choose your package</strong></div>
+            <small>Tap a photo to select</small>
+          </div>
+
+          <div class="booking-package-selector" id="bookingPackageSelector" role="radiogroup" aria-label="Choose Candy Craze package">
+            <button class="booking-package-option" type="button" data-package="Basic Craze — RM80" aria-pressed="false">
+              <span class="package-photo basic-photo booking-thumb" aria-hidden="true"></span>
+              <span class="booking-option-copy"><strong>Basic</strong><b>RM80</b><small>Setup only</small></span>
+            </button>
+            <button class="booking-package-option" type="button" data-package="Standard Craze — RM110" aria-pressed="false">
+              <span class="package-photo standard-photo booking-thumb" aria-hidden="true"></span>
+              <span class="booking-option-copy"><strong>Standard</strong><b>RM110</b><small>+ 3-tier rack</small></span>
+            </button>
+            <button class="booking-package-option" type="button" data-package="Popular Craze — RM260" aria-pressed="false">
+              <span class="package-photo popular-photo booking-thumb" aria-hidden="true"></span>
+              <span class="booking-option-copy"><strong>Popular</strong><b>RM260</b><small>6 candies + 3 snacks</small></span>
+            </button>
+            <button class="booking-package-option" type="button" data-package="Premium Craze — RM360" aria-pressed="false">
+              <span class="package-photo premium-photo booking-thumb" aria-hidden="true"></span>
+              <span class="booking-option-copy"><strong>Premium</strong><b>RM360</b><small>9 candies + 3 snacks + rack</small></span>
+            </button>
+          </div>
+          <input type="hidden" id="packageSelect" value="">
+          <p class="package-choice-error" id="packageChoiceError" aria-live="polite"></p>
+
+          <div class="booking-package-preview" id="bookingPackagePreview" hidden>
+            <div class="package-photo premium-photo booking-preview-photo" id="bookingPreviewPhoto" role="img" aria-label="Selected package preview"></div>
+            <div class="booking-preview-copy">
+              <span>Selected package</span>
+              <div class="booking-preview-title"><h3 id="bookingPreviewName">Premium Craze</h3><strong id="bookingPreviewPrice">RM360</strong></div>
+              <p id="bookingPreviewSummary"></p>
+              <div class="booking-preview-tags" id="bookingPreviewTags"></div>
+            </div>
+          </div>
+
           <div class="booking-addons" id="bookingAddons" hidden>
             <div class="booking-addons-head"><strong>Optional add-ons</strong><span>Popular & Premium only</span></div>
             <p>Random selection. Choose quantity only.</p>
             <div class="addon-form-row"><div><label for="candyAddon">Extra candies</label><select id="candyAddon"><option value="">No extra candies</option><option value="candy3">+3 Random Candies — RM67.40</option><option value="candy6">+6 Random Candies — RM134.80</option></select></div><div><label for="snackAddon">Extra snacks</label><select id="snackAddon"><option value="">No extra snacks</option><option value="snack3">+3 Random Snacks — RM46.30</option></select></div></div>
             <div class="addon-summary" id="addonSummary" aria-live="polite"></div>
           </div>
+
+          <div class="booking-package-head details-head"><div><span class="booking-step">Step 2</span><strong>Event details</strong></div></div>
           <div class="form-row"><div><label for="eventDate">Event date</label><input type="date" id="eventDate" required></div><div class="location-field"><label for="eventLocation">Event location</label><input type="text" id="eventLocation" placeholder="Search venue or full address" autocomplete="off" aria-autocomplete="list" required><div class="location-suggestions" id="locationSuggestions" role="listbox" hidden></div><small id="locationHelper">Start typing and choose the correct address, or enter it manually.</small><button class="location-button" id="currentLocationButton" type="button">Use Current Location</button></div></div>
+
           <button class="button button-light" type="submit">Send via WhatsApp</button>
           <p class="form-status" id="formStatus" aria-live="polite"></p>
           <noscript><p class="noscript">JavaScript is required for the automatic booking form. <a href="https://wa.me/601139376728">WhatsApp Candy Craze directly.</a></p></noscript>
@@ -257,6 +305,6 @@
 
   <footer class="footer"><div class="shell footer-wrap"><div><strong>Candy Craze</strong><p>Candy wall setup for birthdays, weddings and celebrations.</p></div><div class="footer-social"><a href="https://www.instagram.com/eminents.candycraze/" target="_blank" rel="noopener noreferrer">Instagram</a><a href="https://www.tiktok.com/@eminents.candycraze" target="_blank" rel="noopener noreferrer">TikTok</a><a href="https://wa.me/601139376728" target="_blank" rel="noopener noreferrer">WhatsApp</a></div><small>© <span id="year"></span> DANS GLOBAL EMPIRE. All rights reserved.</small></div></footer>
   <a class="mobile-book" href="#booking">Book Candy Craze</a>
-  <script src="script.js?v=4" defer></script>
+  <script src="script.js?v=5" defer></script>
 </body>
 </html>
