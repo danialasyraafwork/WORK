@@ -23,20 +23,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          cat >> visual-booking.css <<'CSS'
-
-/* Mobile event date field: compact and iOS-safe */
-@media(max-width:760px){
-  .booking-form .form-row{grid-template-columns:1fr!important}
-  .booking-form .form-row>div:first-child{width:230px!important;max-width:100%!important;min-width:0!important}
-  .booking-form #eventDate{display:block!important;width:230px!important;max-width:230px!important;min-width:0!important;inline-size:230px!important;max-inline-size:230px!important;min-inline-size:0!important}
-  .booking-form .location-field{width:100%!important;max-width:none!important;min-width:0!important}
-}
-@media(max-width:430px){
-  .booking-form .form-row>div:first-child{width:210px!important}
-  .booking-form #eventDate{width:210px!important;max-width:210px!important;inline-size:210px!important;max-inline-size:210px!important}
-}
-CSS
+          printf '\n/* Mobile event date field: compact and iOS-safe */\n@media(max-width:760px){.booking-form .form-row{grid-template-columns:1fr!important}.booking-form .form-row>div:first-child{width:230px!important;max-width:100%%!important;min-width:0!important}.booking-form #eventDate{display:block!important;width:230px!important;max-width:230px!important;min-width:0!important;inline-size:230px!important;max-inline-size:230px!important;min-inline-size:0!important}.booking-form .location-field{width:100%%!important;max-width:none!important;min-width:0!important}}\n@media(max-width:430px){.booking-form .form-row>div:first-child{width:210px!important}.booking-form #eventDate{width:210px!important;max-width:210px!important;inline-size:210px!important;max-inline-size:210px!important}}\n' >> visual-booking.css
           perl -pi -e 's/visual-booking\.css\?v=3/visual-booking.css?v=4/g' index.html
           rm .github/workflows/fix-event-date.yml
 
@@ -45,6 +32,6 @@ CSS
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html visual-booking.css .github/workflows/fix-event-date.yml
+          git add -A
           git commit -m "Fix compact mobile event date field [skip ci]"
           git push origin HEAD:candy-craze-website-preview
