@@ -23,15 +23,13 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          identify assets/packages/candy-craze-packages.webp
-          W=$(identify -format '%w' assets/packages/candy-craze-packages.webp)
-          H=$(identify -format '%h' assets/packages/candy-craze-packages.webp)
-          Q=$((W / 4))
-          convert assets/packages/candy-craze-packages.webp -crop ${Q}x${H}+0+0 +repage assets/packages/basic.png
-          convert assets/packages/candy-craze-packages.webp -crop ${Q}x${H}+${Q}+0 +repage assets/packages/standard.png
-          convert assets/packages/candy-craze-packages.webp -crop ${Q}x${H}+$((Q * 2))+0 +repage assets/packages/popular.png
-          convert assets/packages/candy-craze-packages.webp -crop ${Q}x${H}+$((Q * 3))+0 +repage assets/packages/premium.png
-          identify assets/packages/basic.png assets/packages/standard.png assets/packages/popular.png assets/packages/premium.png
+          ffprobe -v error -show_entries stream=width,height -of default=noprint_wrappers=1 assets/packages/candy-craze-packages.webp
+          ffmpeg -y -i assets/packages/candy-craze-packages.webp -vf "crop=iw/4:ih:0:0" -frames:v 1 assets/packages/basic.png
+          ffmpeg -y -i assets/packages/candy-craze-packages.webp -vf "crop=iw/4:ih:iw/4:0" -frames:v 1 assets/packages/standard.png
+          ffmpeg -y -i assets/packages/candy-craze-packages.webp -vf "crop=iw/4:ih:iw/2:0" -frames:v 1 assets/packages/popular.png
+          ffmpeg -y -i assets/packages/candy-craze-packages.webp -vf "crop=iw/4:ih:iw*3/4:0" -frames:v 1 assets/packages/premium.png
+          file assets/packages/basic.png assets/packages/standard.png assets/packages/popular.png assets/packages/premium.png
+          ls -lh assets/packages/basic.png assets/packages/standard.png assets/packages/popular.png assets/packages/premium.png
 
       - name: Point the site to PNG package images
         shell: bash
