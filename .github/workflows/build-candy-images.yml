@@ -24,18 +24,20 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y -qq imagemagick
 
-      - name: Build four PNGs from the real package source
+      - name: Build clearer PNG package photos
         shell: bash
         run: |
           set -euo pipefail
-          identify assets/packages/candy-craze-packages.webp
-          W=$(identify -format '%w' assets/packages/candy-craze-packages.webp)
-          H=$(identify -format '%h' assets/packages/candy-craze-packages.webp)
-          Q=$((W / 4))
-          convert assets/packages/candy-craze-packages.webp -crop ${Q}x${H}+0+0 +repage assets/packages/basic.png
-          convert assets/packages/candy-craze-packages.webp -crop ${Q}x${H}+${Q}+0 +repage assets/packages/standard.png
-          convert assets/packages/candy-craze-packages.webp -crop ${Q}x${H}+$((Q * 2))+0 +repage assets/packages/popular.png
-          convert assets/packages/candy-craze-packages.webp -crop ${Q}x${H}+$((Q * 3))+0 +repage assets/packages/premium.png
+          identify assets/packages/basic.webp assets/packages/standard.webp assets/packages/popular.webp assets/packages/premium.webp
+          for name in basic standard popular premium; do
+            convert "assets/packages/${name}.webp" \
+              -filter Lanczos \
+              -resize 200% \
+              -unsharp 0x0.75+0.75+0.008 \
+              -colorspace sRGB \
+              -define png:compression-level=9 \
+              "assets/packages/${name}.png"
+          done
           identify assets/packages/basic.png assets/packages/standard.png assets/packages/popular.png assets/packages/premium.png
           ls -lh assets/packages/basic.png assets/packages/standard.png assets/packages/popular.png assets/packages/premium.png
 
@@ -50,5 +52,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add assets/packages/basic.png assets/packages/standard.png assets/packages/popular.png assets/packages/premium.png visual-booking.css
-          git commit -m "Use PNG Candy Craze package photos [skip ci]"
+          git commit -m "Use clearer PNG Candy Craze package photos [skip ci]"
           git push origin HEAD:candy-craze-website-preview
