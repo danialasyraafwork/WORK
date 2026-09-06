@@ -1,1 +1,0 @@
-PNG package images are being replaced from the higher-resolution package source.
