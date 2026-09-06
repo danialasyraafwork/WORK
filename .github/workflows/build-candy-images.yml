@@ -1,0 +1,52 @@
+name: Build Candy Craze real images
+
+on:
+  push:
+    branches:
+      - candy-craze-website-preview
+    paths:
+      - .github/workflows/build-candy-images.yml
+
+permissions:
+  contents: write
+
+jobs:
+  build-real-images:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Candy Craze branch
+        uses: actions/checkout@v4
+        with:
+          ref: candy-craze-website-preview
+
+      - name: Decode real package photos
+        shell: bash
+        run: |
+          set -euo pipefail
+          base64 -d assets/packages/basic-craze.webp.b64 > assets/packages/basic.webp
+          base64 -d assets/packages/standard-craze.webp.b64 > assets/packages/standard.webp
+          base64 -d assets/packages/popular-craze.webp.b64 > assets/packages/popular.webp
+          base64 -d assets/packages/premium-craze.webp.b64 > assets/packages/premium.webp
+          file assets/packages/basic.webp assets/packages/standard.webp assets/packages/popular.webp assets/packages/premium.webp
+
+      - name: Point website to the four real photos
+        shell: bash
+        run: |
+          cat >> visual-booking.css <<'EOF'
+
+/* Real Candy Craze package photos — separate image files */
+.package-photo{background-repeat:no-repeat!important;background-size:cover!important;background-position:center!important}
+.basic-photo{background-image:url('assets/packages/basic.webp')!important}
+.standard-photo{background-image:url('assets/packages/standard.webp')!important}
+.popular-photo{background-image:url('assets/packages/popular.webp')!important}
+.premium-photo{background-image:url('assets/packages/premium.webp')!important}
+EOF
+
+      - name: Commit decoded images
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/packages/basic.webp assets/packages/standard.webp assets/packages/popular.webp assets/packages/premium.webp visual-booking.css
+          git commit -m "Use real Candy Craze package photos [skip ci]"
+          git push origin HEAD:candy-craze-website-preview
