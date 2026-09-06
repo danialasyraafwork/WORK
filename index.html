@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div class="announcement">Now accepting event bookings · Candy wall packages from <strong>RM80</strong></div>
+  <div class="announcement">Now accepting event bookings · Candy wall packages from <strong>RM80</strong> · <strong>Free delivery within 10km</strong></div>
 
   <header class="site-header" id="top">
     <div class="shell nav-wrap">
@@ -180,7 +180,7 @@
           </article>
         </div>
 
-        <p class="package-note reveal">* Candies and snacks for Popular Craze and Premium Craze are provided as random selections.</p>
+        <p class="package-note reveal">* Candies and snacks for Popular Craze and Premium Craze are provided as random selections. <strong>Free delivery within 10km.</strong></p>
       </div>
     </section>
 
@@ -226,8 +226,8 @@
         </div>
         <div class="process-grid">
           <div class="process-step reveal"><span>1</span><h3>Choose your package</h3><p>Pick Basic, Standard, Popular or Premium.</p></div>
-          <div class="process-step reveal"><span>2</span><h3>Send your event details</h3><p>Share your preferred date, location and package with us.</p></div>
-          <div class="process-step reveal"><span>3</span><h3>Confirm your booking</h3><p>Once everything is confirmed, your sweet corner is on its way.</p></div>
+          <div class="process-step reveal"><span>2</span><h3>Send your event details</h3><p>Fill in all required details and continue straight to WhatsApp.</p></div>
+          <div class="process-step reveal"><span>3</span><h3>Confirm your booking</h3><p>Send the pre-filled WhatsApp enquiry and we’ll help confirm availability.</p></div>
         </div>
       </div>
     </section>
@@ -237,7 +237,7 @@
         <div class="section-heading reveal">
           <span class="eyebrow">Quick answers</span>
           <h2>Good to know.</h2>
-          <p>Still unsure which package fits your event? DM us and we’ll help you compare.</p>
+          <p>Still unsure which package fits your event? WhatsApp us and we’ll help you compare.</p>
         </div>
 
         <div class="accordion reveal">
@@ -259,7 +259,11 @@
           </details>
           <details>
             <summary>How do I book?</summary>
-            <p>Choose a package below, fill in your event details, copy the enquiry message and send it to us through Instagram or TikTok.</p>
+            <p>Choose your package, fill in all required event details, then tap “Send via WhatsApp”. Your enquiry will open in WhatsApp ready to send.</p>
+          </details>
+          <details>
+            <summary>Is delivery free?</summary>
+            <p>Free delivery is available within 10km.</p>
           </details>
         </div>
       </div>
@@ -270,7 +274,8 @@
         <div class="booking-copy">
           <span class="eyebrow light">Ready when you are</span>
           <h2>Let’s make your event a little sweeter.</h2>
-          <p>Fill in the basics. We’ll prepare a message you can copy and send straight to Candy Craze.</p>
+          <p>Fill in all the event details below and we’ll open WhatsApp with your enquiry message ready to send.</p>
+          <p class="delivery-note"><strong>Free delivery within 10km.</strong></p>
           <div class="social-links">
             <a href="https://www.instagram.com/eminents.candycraze/" target="_blank" rel="noreferrer">Instagram <strong>@eminents.candycraze</strong></a>
             <a href="https://www.tiktok.com/@eminents.candycraze" target="_blank" rel="noreferrer">TikTok <strong>@eminents.candycraze</strong></a>
@@ -280,11 +285,11 @@
         <form class="booking-form" id="bookingForm">
           <label>
             Your name
-            <input type="text" id="customerName" placeholder="e.g. Aina" autocomplete="name" />
+            <input type="text" id="customerName" placeholder="e.g. Aina" autocomplete="name" required />
           </label>
           <label>
             Package
-            <select id="packageSelect">
+            <select id="packageSelect" required>
               <option value="">Choose a package</option>
               <option>Basic Craze — RM80</option>
               <option>Standard Craze — RM110</option>
@@ -295,14 +300,14 @@
           <div class="form-row">
             <label>
               Event date
-              <input type="date" id="eventDate" />
+              <input type="date" id="eventDate" required />
             </label>
             <label>
               Event location
-              <input type="text" id="eventLocation" placeholder="Area / venue" />
+              <input type="text" id="eventLocation" placeholder="Area / venue" required />
             </label>
           </div>
-          <button class="button button-light" type="submit">Copy enquiry message</button>
+          <button class="button button-light" type="submit">Send via WhatsApp</button>
           <p class="form-status" id="formStatus" aria-live="polite"></p>
         </form>
       </div>
@@ -325,6 +330,6 @@
 
   <a class="mobile-book" href="#booking">Book Candy Craze</a>
 
-  <script src="script.js"></script>
+  <script src="script.js?v=2"></script>
 </body>
 </html>
