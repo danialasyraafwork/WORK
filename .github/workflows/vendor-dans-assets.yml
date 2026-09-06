@@ -1,0 +1,86 @@
+name: Vendor DANS assets into V2
+
+on:
+  push:
+    branches:
+      - dans-website-v2-preview
+    paths:
+      - .github/workflows/vendor-dans-assets.yml
+
+permissions:
+  contents: write
+
+jobs:
+  vendor-assets:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout V2 preview
+        uses: actions/checkout@v4
+        with:
+          ref: dans-website-v2-preview
+          fetch-depth: 0
+
+      - name: Checkout original DANS assets
+        uses: actions/checkout@v4
+        with:
+          repository: dansglobalempire/dansglobalempire.github.io
+          ref: main
+          path: _dans_original
+
+      - name: Copy all website assets locally
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf favicon assets
+          cp -a _dans_original/favicon ./favicon
+          cp -a _dans_original/assets ./assets
+          rm -rf _dans_original
+
+      - name: Make V2 fully self-contained
+        shell: python
+        run: |
+          from pathlib import Path
+
+          index = Path('index.html')
+          html = index.read_text(encoding='utf-8')
+          remote = 'https://raw.githubusercontent.com/dansglobalempire/dansglobalempire.github.io/main/'
+          html = html.replace(remote + 'favicon/logo.png', 'favicon/logo.png')
+          html = html.replace(remote + 'favicon/favicon.png', 'favicon/favicon.png')
+          html = html.replace('<link rel="preconnect" href="https://raw.githubusercontent.com" crossorigin>\n', '')
+          html = html.replace('<link rel="dns-prefetch" href="//raw.githubusercontent.com">\n', '')
+          html = html.replace('<link rel="icon" href="https://dansglobalempire.com/favicon/favicon.png" type="image/png">', '<link rel="icon" href="favicon/favicon.png" type="image/png">')
+          html = html.replace('<link rel="apple-touch-icon" href="https://dansglobalempire.com/favicon/favicon.png">', '<link rel="apple-touch-icon" href="favicon/favicon.png">')
+          index.write_text(html, encoding='utf-8')
+
+          app = Path('app.js')
+          js = app.read_text(encoding='utf-8')
+          js = js.replace("const B='https://raw.githubusercontent.com/dansglobalempire/dansglobalempire.github.io/main/assets/products/';", "const B='assets/products/';")
+          app.write_text(js, encoding='utf-8')
+
+      - name: Verify no runtime dependency on old GitHub asset repo
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f favicon/favicon.png
+          test -f favicon/logo.png
+          test -d assets/products
+          if grep -R "raw.githubusercontent.com/dansglobalempire/dansglobalempire.github.io" index.html app.js styles.css; then
+            echo 'Remote DANS asset dependency still exists.' >&2
+            exit 1
+          fi
+          find favicon assets -type f | sort
+
+      - name: Commit self-contained website
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html app.js favicon assets
+          if git diff --cached --quiet; then
+            echo 'Nothing to commit.'
+            exit 0
+          fi
+          git commit -m 'Bundle all DANS website assets locally'
+          git push origin HEAD:dans-website-v2-preview
