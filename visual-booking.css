@@ -21,3 +21,10 @@
 @media(max-width:980px){.hero-photo{height:560px}.package-card-photo{height:340px}.booking-package-selector{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:760px){.hero-photo-frame{width:min(410px,94%)}.hero-photo{height:500px}.hero-photo-label{left:20px;right:20px;bottom:20px;padding:13px 14px}.hero-photo-label strong{font-size:16px}.package-card-photo{height:355px}.package-body{padding:24px 22px 26px}.package-card .package-badge{position:absolute;margin:0}.booking-package-head{align-items:flex-end}.booking-package-head>div{display:grid;gap:7px}.booking-package-selector{grid-template-columns:1fr 1fr;gap:8px}.booking-package-option{grid-template-columns:1fr;min-height:0}.booking-thumb{width:100%;height:128px;min-height:128px}.booking-option-copy{padding:10px 11px 12px}.booking-option-copy strong{font-size:17px}.booking-package-preview{grid-template-columns:112px 1fr;gap:13px}.booking-preview-photo{min-height:165px}.booking-preview-title{display:grid;gap:2px}.booking-preview-title h3{font-size:21px}.booking-preview-title strong{font-size:18px}.booking-preview-tags span{font-size:8px}}
 @media(max-width:430px){.booking-package-selector{grid-template-columns:1fr 1fr}.booking-thumb{height:116px;min-height:116px}.booking-option-copy small{font-size:8px}.booking-package-preview{grid-template-columns:96px 1fr}.booking-preview-photo{min-height:152px}.package-card-photo{height:330px}}
+
+/* Real Candy Craze package photos - separate image files */
+.package-photo{background-repeat:no-repeat!important;background-size:cover!important;background-position:center!important}
+.basic-photo{background-image:url('assets/packages/basic.webp')!important}
+.standard-photo{background-image:url('assets/packages/standard.webp')!important}
+.popular-photo{background-image:url('assets/packages/popular.webp')!important}
+.premium-photo{background-image:url('assets/packages/premium.webp')!important}
