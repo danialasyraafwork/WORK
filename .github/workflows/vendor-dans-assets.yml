@@ -42,11 +42,11 @@ jobs:
         run: |
           from pathlib import Path
 
+          remote = 'https://raw.githubusercontent.com/dansglobalempire/dansglobalempire.github.io/main/'
+
           index = Path('index.html')
           html = index.read_text(encoding='utf-8')
-          remote = 'https://raw.githubusercontent.com/dansglobalempire/dansglobalempire.github.io/main/'
-          html = html.replace(remote + 'favicon/logo.png', 'favicon/logo.png')
-          html = html.replace(remote + 'favicon/favicon.png', 'favicon/favicon.png')
+          html = html.replace(remote, '')
           html = html.replace('<link rel="preconnect" href="https://raw.githubusercontent.com" crossorigin>\n', '')
           html = html.replace('<link rel="dns-prefetch" href="//raw.githubusercontent.com">\n', '')
           html = html.replace('<link rel="icon" href="https://dansglobalempire.com/favicon/favicon.png" type="image/png">', '<link rel="icon" href="favicon/favicon.png" type="image/png">')
@@ -55,20 +55,24 @@ jobs:
 
           app = Path('app.js')
           js = app.read_text(encoding='utf-8')
-          js = js.replace("const B='https://raw.githubusercontent.com/dansglobalempire/dansglobalempire.github.io/main/assets/products/';", "const B='assets/products/';")
+          js = js.replace(remote, '')
           app.write_text(js, encoding='utf-8')
 
-      - name: Verify no runtime dependency on old GitHub asset repo
+      - name: Verify portable website bundle
         shell: bash
         run: |
           set -euo pipefail
           test -f favicon/favicon.png
           test -f favicon/logo.png
           test -d assets/products
+          test -f assets/products/robot/image1.jpg
+          test -f assets/products/electricaldesign/image2.PNG
+          test -f assets/products/plc/image2.jpg
           if grep -R "raw.githubusercontent.com/dansglobalempire/dansglobalempire.github.io" index.html app.js styles.css; then
             echo 'Remote DANS asset dependency still exists.' >&2
             exit 1
           fi
+          echo "Bundled files: $(find favicon assets -type f | wc -l)"
           find favicon assets -type f | sort
 
       - name: Commit self-contained website
