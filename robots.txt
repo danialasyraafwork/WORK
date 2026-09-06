@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://danialasyraafwork.github.io/WORK/sitemap.xml
+Sitemap: https://candycraze.dansglobalempire.com/sitemap.xml
