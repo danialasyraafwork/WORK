@@ -24,7 +24,7 @@
 
 /* Real Candy Craze package photos - separate image files */
 .package-photo{background-repeat:no-repeat!important;background-size:cover!important;background-position:center!important}
-.basic-photo{background-image:url('assets/packages/basic.webp')!important}
-.standard-photo{background-image:url('assets/packages/standard.webp')!important}
-.popular-photo{background-image:url('assets/packages/popular.webp')!important}
-.premium-photo{background-image:url('assets/packages/premium.webp')!important}
+.basic-photo{background-image:url('assets/packages/basic.png')!important}
+.standard-photo{background-image:url('assets/packages/standard.png')!important}
+.popular-photo{background-image:url('assets/packages/popular.png')!important}
+.premium-photo{background-image:url('assets/packages/premium.png')!important}
