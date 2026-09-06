@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://danialasyraafwork.github.io/WORK/sitemap.xml
