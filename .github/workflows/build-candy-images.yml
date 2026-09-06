@@ -32,15 +32,13 @@ jobs:
       - name: Point website to the four real photos
         shell: bash
         run: |
-          cat >> visual-booking.css <<'EOF'
-
-/* Real Candy Craze package photos — separate image files */
-.package-photo{background-repeat:no-repeat!important;background-size:cover!important;background-position:center!important}
-.basic-photo{background-image:url('assets/packages/basic.webp')!important}
-.standard-photo{background-image:url('assets/packages/standard.webp')!important}
-.popular-photo{background-image:url('assets/packages/popular.webp')!important}
-.premium-photo{background-image:url('assets/packages/premium.webp')!important}
-EOF
+          echo '' >> visual-booking.css
+          echo '/* Real Candy Craze package photos - separate image files */' >> visual-booking.css
+          echo ".package-photo{background-repeat:no-repeat!important;background-size:cover!important;background-position:center!important}" >> visual-booking.css
+          echo ".basic-photo{background-image:url('assets/packages/basic.webp')!important}" >> visual-booking.css
+          echo ".standard-photo{background-image:url('assets/packages/standard.webp')!important}" >> visual-booking.css
+          echo ".popular-photo{background-image:url('assets/packages/popular.webp')!important}" >> visual-booking.css
+          echo ".premium-photo{background-image:url('assets/packages/premium.webp')!important}" >> visual-booking.css
 
       - name: Commit decoded images
         shell: bash
