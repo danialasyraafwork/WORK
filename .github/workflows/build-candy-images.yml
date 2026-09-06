@@ -1,4 +1,4 @@
-name: Build Candy Craze real images
+name: Build Candy Craze PNG images
 
 on:
   push:
@@ -11,7 +11,7 @@ permissions:
   contents: write
 
 jobs:
-  build-real-images:
+  build-png-images:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Candy Craze branch
@@ -19,32 +19,30 @@ jobs:
         with:
           ref: candy-craze-website-preview
 
-      - name: Decode real package photos
+      - name: Build four PNGs from the real package source
         shell: bash
         run: |
           set -euo pipefail
-          base64 -d assets/packages/basic-craze.webp.b64 > assets/packages/basic.webp
-          base64 -d assets/packages/standard-craze.webp.b64 > assets/packages/standard.webp
-          base64 -d assets/packages/popular-craze.webp.b64 > assets/packages/popular.webp
-          base64 -d assets/packages/premium-craze.webp.b64 > assets/packages/premium.webp
-          file assets/packages/basic.webp assets/packages/standard.webp assets/packages/popular.webp assets/packages/premium.webp
+          identify assets/packages/candy-craze-packages.webp
+          W=$(identify -format '%w' assets/packages/candy-craze-packages.webp)
+          H=$(identify -format '%h' assets/packages/candy-craze-packages.webp)
+          Q=$((W / 4))
+          convert assets/packages/candy-craze-packages.webp -crop ${Q}x${H}+0+0 +repage assets/packages/basic.png
+          convert assets/packages/candy-craze-packages.webp -crop ${Q}x${H}+${Q}+0 +repage assets/packages/standard.png
+          convert assets/packages/candy-craze-packages.webp -crop ${Q}x${H}+$((Q * 2))+0 +repage assets/packages/popular.png
+          convert assets/packages/candy-craze-packages.webp -crop ${Q}x${H}+$((Q * 3))+0 +repage assets/packages/premium.png
+          identify assets/packages/basic.png assets/packages/standard.png assets/packages/popular.png assets/packages/premium.png
 
-      - name: Point website to the four real photos
+      - name: Point the site to PNG package images
         shell: bash
         run: |
-          echo '' >> visual-booking.css
-          echo '/* Real Candy Craze package photos - separate image files */' >> visual-booking.css
-          echo ".package-photo{background-repeat:no-repeat!important;background-size:cover!important;background-position:center!important}" >> visual-booking.css
-          echo ".basic-photo{background-image:url('assets/packages/basic.webp')!important}" >> visual-booking.css
-          echo ".standard-photo{background-image:url('assets/packages/standard.webp')!important}" >> visual-booking.css
-          echo ".popular-photo{background-image:url('assets/packages/popular.webp')!important}" >> visual-booking.css
-          echo ".premium-photo{background-image:url('assets/packages/premium.webp')!important}" >> visual-booking.css
+          perl -pi -e "s/assets\/packages\/basic\.webp/assets\/packages\/basic.png/g; s/assets\/packages\/standard\.webp/assets\/packages\/standard.png/g; s/assets\/packages\/popular\.webp/assets\/packages\/popular.png/g; s/assets\/packages\/premium\.webp/assets\/packages\/premium.png/g" visual-booking.css
 
-      - name: Commit decoded images
+      - name: Commit PNG images
         shell: bash
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add assets/packages/basic.webp assets/packages/standard.webp assets/packages/popular.webp assets/packages/premium.webp visual-booking.css
-          git commit -m "Use real Candy Craze package photos [skip ci]"
+          git add assets/packages/basic.png assets/packages/standard.png assets/packages/popular.png assets/packages/premium.png visual-booking.css
+          git commit -m "Use PNG Candy Craze package photos [skip ci]"
           git push origin HEAD:candy-craze-website-preview
