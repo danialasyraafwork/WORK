@@ -6,12 +6,19 @@ Candy Craze website for `https://candycraze.dansglobalempire.com/`, under DANS G
 
 | Package | Price | Includes |
 |---|---:|---|
-| Basic Craze | RM80 | Candy wall + 9 boxes, setup only |
+| Basic Craze | RM95 regular / RM80 promo | Candy wall + 9 boxes, setup only |
 | Standard Craze | RM110 | Candy wall + 9 boxes + 3-tier rack, setup only |
 | Popular Craze | RM260 | 6 random candies + 3 random snacks |
 | Premium Craze | RM360 | 3-tier rack + 9 random candies + 3 random snacks |
 
 All packages include 50 paper cups, free installation and minimal decoration. Free delivery is available within 10km.
+
+## Basic Craze Sep–Oct 2026 Promotion
+
+- Regular price: **RM95**
+- Promotional price: **RM80**
+- Promo applies to bookings confirmed from **1 September 2026 through 31 October 2026**.
+- From **1 November 2026**, the website automatically uses the regular **RM95** price.
 
 ## Add-ons
 
