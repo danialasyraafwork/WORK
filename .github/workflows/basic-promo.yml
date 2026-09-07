@@ -1,0 +1,243 @@
+name: Apply Basic Craze promotion
+
+on:
+  push:
+    branches:
+      - candy-craze-website-preview
+    paths:
+      - .github/workflows/basic-promo.yml
+
+permissions:
+  contents: write
+
+jobs:
+  apply-promo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: candy-craze-website-preview
+
+      - name: Patch Basic Craze promotion
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          script_path = Path('script.js')
+          s = script_path.read_text()
+
+          def replace_once(old, new, label):
+              global s
+              if s.count(old) != 1:
+                  raise SystemExit(f'{label}: expected exactly 1 match, found {s.count(old)}')
+              s = s.replace(old, new, 1)
+
+          replace_once(
+              "  const WHATSAPP_NUMBER = '601139376728';\n",
+              "  const WHATSAPP_NUMBER = '601139376728';\n\n"
+              "  const BASIC_PROMO_PRICE = 80;\n"
+              "  const BASIC_REGULAR_PRICE = 95;\n"
+              "  const BASIC_PROMO_START = 20260901;\n"
+              "  const BASIC_PROMO_END = 20261031;\n\n"
+              "  function malaysiaDateNumber() {\n"
+              "    try {\n"
+              "      const parts = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Kuala_Lumpur', year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(new Date());\n"
+              "      const values = Object.fromEntries(parts.map((part) => [part.type, part.value]));\n"
+              "      return Number(`${values.year}${values.month}${values.day}`);\n"
+              "    } catch {\n"
+              "      const now = new Date();\n"
+              "      return Number(`${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}`);\n"
+              "    }\n"
+              "  }\n\n"
+              "  function basicPromoActive() {\n"
+              "    const today = malaysiaDateNumber();\n"
+              "    return today >= BASIC_PROMO_START && today <= BASIC_PROMO_END;\n"
+              "  }\n\n"
+              "  function currentBasicPrice() { return basicPromoActive() ? BASIC_PROMO_PRICE : BASIC_REGULAR_PRICE; }\n"
+              "  function currentBasicPackageValue() { return `Basic Craze — RM${currentBasicPrice()}`; }\n",
+              'promo constants'
+          )
+
+          old_basic = """    'Basic Craze — RM80': {
+      key: 'basic', price: 80, candies: 0, snacks: 0, addons: false,
+      name: 'Basic Craze',
+      summary: 'A clean candy wall setup with 9 boxes. Candies and snacks are not included.',
+      tags: ['Candy wall + 9 boxes', 'Setup only', '50 paper cups', 'Free installation']
+    },
+"""
+          new_basic = old_basic + """    'Basic Craze — RM95': {
+      key: 'basic', price: 95, candies: 0, snacks: 0, addons: false,
+      name: 'Basic Craze',
+      summary: 'A clean candy wall setup with 9 boxes. Candies and snacks are not included.',
+      tags: ['Candy wall + 9 boxes', 'Setup only', '50 paper cups', 'Free installation']
+    },
+"""
+          replace_once(old_basic, new_basic, 'Basic package info')
+
+          marker = "  window.addEventListener('scroll', () => {\n"
+          promo_ui = r'''  function ensurePromoStyles() {
+    if (document.getElementById('basicPromoStyles')) return;
+    const style = document.createElement('style');
+    style.id = 'basicPromoStyles';
+    style.textContent = '.basic-promo-badge{display:inline-flex;align-items:center;margin:0 0 14px;padding:7px 11px;border-radius:999px;background:#8c5a3e;color:#fff;font-size:10px;font-weight:800;letter-spacing:.07em;text-transform:uppercase}.basic-promo-note{margin:10px 0 0;color:#8c5a3e;font-size:12px;font-weight:700}.basic-promo-note s{opacity:.7;margin-right:5px}.promo-announcement{background:#8c5a3e;color:#fffaf6}.booking-promo-note{display:block;color:#f0cdbb!important;font-weight:700}';
+    document.head.appendChild(style);
+  }
+
+  function updateBasicStructuredData(active, price) {
+    const schema = document.querySelector('script[type="application/ld+json"]');
+    if (!schema) return;
+    try {
+      const data = JSON.parse(schema.textContent);
+      const service = data?.['@graph']?.find((item) => item['@type'] === 'Service');
+      const offer = service?.offers?.find((item) => String(item.name || '').startsWith('Basic Craze'));
+      if (offer) {
+        offer.name = active ? 'Basic Craze — Sep–Oct 2026 Promo' : 'Basic Craze';
+        offer.price = String(price);
+        offer.priceCurrency = 'MYR';
+        offer.description = active ? 'Promotional price RM80 for bookings confirmed by 31 October 2026. Regular price RM95.' : 'Regular price RM95.';
+        if (active) offer.priceValidUntil = '2026-10-31'; else delete offer.priceValidUntil;
+      }
+      schema.textContent = JSON.stringify(data);
+    } catch {}
+  }
+
+  function updateBasicMeta(active) {
+    const description = active
+      ? 'Candy Craze candy wall packages for events. Basic Craze promo RM80 for bookings confirmed by 31 October 2026 (regular RM95), with free installation and free delivery within 10km.'
+      : 'Candy Craze candy wall packages for birthdays, weddings and celebrations, with free installation and free delivery within 10km.';
+    document.querySelector('meta[name="description"]')?.setAttribute('content', description);
+    document.querySelector('meta[property="og:description"]')?.setAttribute('content', description);
+    document.querySelector('meta[name="twitter:description"]')?.setAttribute('content', description);
+  }
+
+  function applyBasicPricingUI() {
+    ensurePromoStyles();
+    const active = basicPromoActive();
+    const price = currentBasicPrice();
+    const value = currentBasicPackageValue();
+
+    const announcement = document.querySelector('.announcement');
+    const announcementPrice = announcement?.querySelector('strong');
+    if (announcementPrice) announcementPrice.textContent = active ? 'RM80 promo' : 'RM95';
+    announcement?.classList.toggle('promo-announcement', active);
+
+    const trustItems = document.querySelectorAll('.trust-row > div');
+    if (trustItems[1]?.querySelector('strong')) trustItems[1].querySelector('strong').textContent = money(price);
+    if (trustItems[1]?.querySelector('span')) trustItems[1].querySelector('span').textContent = active ? 'Sep–Oct promo' : 'starting price';
+
+    const basicCard = document.querySelector('.basic-photo.package-card-photo')?.closest('.package-card');
+    if (basicCard) {
+      const priceEl = basicCard.querySelector('.price');
+      if (priceEl) priceEl.innerHTML = `<small>RM</small>${price}`;
+      const selectButton = basicCard.querySelector('.select-package');
+      if (selectButton) selectButton.dataset.package = value;
+      let badge = basicCard.querySelector('.basic-promo-badge');
+      let note = basicCard.querySelector('.basic-promo-note');
+      if (active) {
+        if (!badge) {
+          badge = document.createElement('div');
+          badge.className = 'basic-promo-badge';
+          badge.textContent = 'Sep–Oct 2026 Promo';
+          basicCard.querySelector('.package-body')?.prepend(badge);
+        }
+        if (!note) {
+          note = document.createElement('p');
+          note.className = 'basic-promo-note';
+          note.innerHTML = '<s>Normal RM95</s> RM80 for bookings confirmed by 31 October 2026.';
+          basicCard.querySelector('.feature-list')?.insertAdjacentElement('afterend', note);
+        }
+      } else {
+        badge?.remove();
+        note?.remove();
+      }
+    }
+
+    const basicOption = packageOptions.find((button) => button.querySelector('.basic-photo'));
+    if (basicOption) {
+      basicOption.dataset.package = value;
+      const priceText = basicOption.querySelector('b');
+      const smallText = basicOption.querySelector('small');
+      if (priceText) priceText.textContent = money(price);
+      if (smallText) {
+        smallText.textContent = active ? 'Promo · normal RM95' : 'Setup only';
+        smallText.classList.toggle('booking-promo-note', active);
+      }
+    }
+
+    if (packageSelect?.value?.startsWith('Basic Craze')) {
+      packageSelect.value = value;
+      renderPackagePreview(value);
+    }
+    updateBasicStructuredData(active, price);
+    updateBasicMeta(active);
+  }
+
+'''
+          replace_once(marker, promo_ui + marker, 'promo UI')
+
+          replace_once(
+              "  function selectPackage(value, scrollToBooking = false) {\n    if (!packageSelect || !PACKAGE_INFO[value]) return;\n    packageSelect.value = value;\n    renderPackagePreview(value);\n",
+              "  function selectPackage(value, scrollToBooking = false) {\n    const normalizedValue = value?.startsWith('Basic Craze') ? currentBasicPackageValue() : value;\n    if (!packageSelect || !PACKAGE_INFO[normalizedValue]) return;\n    packageSelect.value = normalizedValue;\n    renderPackagePreview(normalizedValue);\n",
+              'select package normalization'
+          )
+
+          replace_once(
+              "  packageOptions.forEach((button) => {\n",
+              "  applyBasicPricingUI();\n\n  packageOptions.forEach((button) => {\n",
+              'apply promo before listeners'
+          )
+
+          replace_once(
+              "      }));\n    }\n\n    if (packageChoiceError) packageChoiceError.textContent = '';\n",
+              "      }));\n      if (info.key === 'basic' && basicPromoActive()) {\n        const promoTag = document.createElement('span');\n        promoTag.textContent = 'Sep–Oct promo · normal RM95';\n        bookingPreviewTags.prepend(promoTag);\n      }\n    }\n\n    if (packageChoiceError) packageChoiceError.textContent = '';\n",
+              'promo preview tag'
+          )
+
+          replace_once(
+              "  bookingForm?.addEventListener('submit', (event) => {\n    event.preventDefault();\n\n    const pkg = packageSelect?.value || '';\n",
+              "  bookingForm?.addEventListener('submit', (event) => {\n    event.preventDefault();\n\n    if (packageSelect?.value?.startsWith('Basic Craze')) {\n      const latestBasicValue = currentBasicPackageValue();\n      if (packageSelect.value !== latestBasicValue) {\n        packageSelect.value = latestBasicValue;\n        applyBasicPricingUI();\n        renderPackagePreview(latestBasicValue);\n      }\n    }\n\n    const pkg = packageSelect?.value || '';\n",
+              'submit repricing'
+          )
+
+          replace_once(
+              "    const totalPrice = packageInfo.price + addonTotal;\n\n    const message = [\n",
+              "    const totalPrice = packageInfo.price + addonTotal;\n    const isBasicPromo = packageInfo.key === 'basic' && basicPromoActive();\n\n    const message = [\n",
+              'promo submit flag'
+          )
+
+          replace_once(
+              "      `Package: ${pkg}`,\n      ...(packageInfo.addons ? [\n",
+              "      `Package: ${pkg}`,\n      ...(isBasicPromo ? ['Promo: Sep–Oct 2026 Basic Craze promo · normal RM95 · subject to booking confirmation by 31/10/2026'] : []),\n      ...(packageInfo.addons ? [\n",
+              'WhatsApp promo line'
+          )
+
+          script_path.write_text(s)
+
+          index_path = Path('index.html')
+          index = index_path.read_text()
+          if 'script.js?v=5' not in index:
+              raise SystemExit('index cache-buster marker not found')
+          index_path.write_text(index.replace('script.js?v=5', 'script.js?v=6', 1))
+
+          readme_path = Path('README.md')
+          readme = readme_path.read_text()
+          readme = readme.replace('| Basic Craze | RM80 | Candy wall + 9 boxes, setup only |', '| Basic Craze | RM95 regular / RM80 promo | Candy wall + 9 boxes, setup only |')
+          promo_section = '''\n## Basic Craze Sep–Oct 2026 Promotion\n\n- Regular price: **RM95**\n- Promotional price: **RM80**\n- Promo applies to bookings confirmed from **1 September 2026 through 31 October 2026**.\n- From **1 November 2026**, the website automatically uses the regular **RM95** price.\n\n'''
+          if '## Basic Craze Sep–Oct 2026 Promotion' not in readme:
+              readme = readme.replace('\n## Add-ons\n', promo_section + '## Add-ons\n')
+          readme_path.write_text(readme)
+          PY
+
+          node --check script.js
+          git diff --check
+
+      - name: Commit promotion changes and remove temporary workflow
+        shell: bash
+        run: |
+          git config user.name "danialasyraafwork"
+          git config user.email "danialasyraafwork@gmail.com"
+          git rm .github/workflows/basic-promo.yml
+          git add script.js index.html README.md
+          git commit -m "Add Sep-Oct Basic Craze promotion [skip ci]"
+          git push origin candy-craze-website-preview
