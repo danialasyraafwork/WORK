@@ -1,10 +1,9 @@
 // Candy Craze main interactions
 (() => {
-  // Load the visual package styles added for the photo selector.
   if (!document.querySelector('link[href*="visual-booking.css"]')) {
     const visualCss = document.createElement('link');
     visualCss.rel = 'stylesheet';
-    visualCss.href = 'visual-booking.css?v=1';
+    visualCss.href = 'visual-booking.css?v=4';
     document.head.appendChild(visualCss);
   }
 
@@ -34,9 +33,47 @@
   const bookingPreviewTags = document.getElementById('bookingPreviewTags');
   const WHATSAPP_NUMBER = '601139376728';
 
+  const BASIC_PROMO_PRICE = 80;
+  const BASIC_REGULAR_PRICE = 95;
+  const BASIC_PROMO_START = 20260901;
+  const BASIC_PROMO_END = 20261031;
+
+  function malaysiaDateNumber() {
+    try {
+      const parts = new Intl.DateTimeFormat('en-CA', {
+        timeZone: 'Asia/Kuala_Lumpur',
+        year: 'numeric', month: '2-digit', day: '2-digit'
+      }).formatToParts(new Date());
+      const values = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+      return Number(`${values.year}${values.month}${values.day}`);
+    } catch {
+      const now = new Date();
+      return Number(`${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}`);
+    }
+  }
+
+  function basicPromoActive() {
+    const today = malaysiaDateNumber();
+    return today >= BASIC_PROMO_START && today <= BASIC_PROMO_END;
+  }
+
+  function currentBasicPrice() {
+    return basicPromoActive() ? BASIC_PROMO_PRICE : BASIC_REGULAR_PRICE;
+  }
+
+  function currentBasicPackageValue() {
+    return `Basic Craze — RM${currentBasicPrice()}`;
+  }
+
   const PACKAGE_INFO = {
     'Basic Craze — RM80': {
       key: 'basic', price: 80, candies: 0, snacks: 0, addons: false,
+      name: 'Basic Craze',
+      summary: 'A clean candy wall setup with 9 boxes. Candies and snacks are not included.',
+      tags: ['Candy wall + 9 boxes', 'Setup only', '50 paper cups', 'Free installation']
+    },
+    'Basic Craze — RM95': {
+      key: 'basic', price: 95, candies: 0, snacks: 0, addons: false,
       name: 'Basic Craze',
       summary: 'A clean candy wall setup with 9 boxes. Candies and snacks are not included.',
       tags: ['Candy wall + 9 boxes', 'Setup only', '50 paper cups', 'Free installation']
@@ -71,6 +108,116 @@
     const decimals = Number.isInteger(value) ? 0 : 2;
     return `RM${value.toFixed(decimals)}`;
   };
+
+  function ensurePromoStyles() {
+    if (document.getElementById('basicPromoStyles')) return;
+    const style = document.createElement('style');
+    style.id = 'basicPromoStyles';
+    style.textContent = `
+      .basic-promo-badge{display:inline-flex;align-items:center;margin:0 0 14px;padding:7px 11px;border-radius:999px;background:#8c5a3e;color:#fff;font-size:10px;font-weight:800;letter-spacing:.07em;text-transform:uppercase}
+      .basic-promo-note{margin:10px 0 0;color:#8c5a3e;font-size:12px;font-weight:700}
+      .basic-promo-note s{opacity:.7;margin-right:5px}
+      .promo-announcement{background:#8c5a3e;color:#fffaf6}
+      .booking-promo-note{display:block;color:#f0cdbb!important;font-weight:700}
+    `;
+    document.head.appendChild(style);
+  }
+
+  function updateBasicStructuredData(active, price) {
+    const schema = document.querySelector('script[type="application/ld+json"]');
+    if (!schema) return;
+    try {
+      const data = JSON.parse(schema.textContent);
+      const service = data?.['@graph']?.find((item) => item['@type'] === 'Service');
+      const offer = service?.offers?.find((item) => String(item.name || '').startsWith('Basic Craze'));
+      if (offer) {
+        offer.name = active ? 'Basic Craze — Sep–Oct 2026 Promo' : 'Basic Craze';
+        offer.price = String(price);
+        offer.priceCurrency = 'MYR';
+        offer.description = active
+          ? 'Promotional price RM80 for bookings confirmed by 31 October 2026. Regular price RM95.'
+          : 'Regular price RM95.';
+        if (active) offer.priceValidUntil = '2026-10-31';
+        else delete offer.priceValidUntil;
+      }
+      schema.textContent = JSON.stringify(data);
+    } catch {}
+  }
+
+  function updateBasicMeta(active) {
+    const description = active
+      ? 'Candy Craze candy wall packages for events. Basic Craze promo RM80 for bookings confirmed by 31 October 2026 (regular RM95), with free installation and free delivery within 10km.'
+      : 'Candy Craze candy wall packages for birthdays, weddings and celebrations, with free installation and free delivery within 10km.';
+    document.querySelector('meta[name="description"]')?.setAttribute('content', description);
+    document.querySelector('meta[property="og:description"]')?.setAttribute('content', description);
+    document.querySelector('meta[name="twitter:description"]')?.setAttribute('content', description);
+  }
+
+  function applyBasicPricingUI() {
+    ensurePromoStyles();
+    const active = basicPromoActive();
+    const price = currentBasicPrice();
+    const value = currentBasicPackageValue();
+
+    const announcement = document.querySelector('.announcement');
+    const announcementPrice = announcement?.querySelector('strong');
+    if (announcementPrice) announcementPrice.textContent = active ? 'RM80 promo' : 'RM95';
+    announcement?.classList.toggle('promo-announcement', active);
+
+    const trustItems = document.querySelectorAll('.trust-row > div');
+    const trustPrice = trustItems[1]?.querySelector('strong');
+    const trustLabel = trustItems[1]?.querySelector('span');
+    if (trustPrice) trustPrice.textContent = money(price);
+    if (trustLabel) trustLabel.textContent = active ? 'Sep–Oct promo' : 'starting price';
+
+    const basicCard = document.querySelector('.basic-photo.package-card-photo')?.closest('.package-card');
+    if (basicCard) {
+      const priceEl = basicCard.querySelector('.price');
+      if (priceEl) priceEl.innerHTML = `<small>RM</small>${price}`;
+      const selectButton = basicCard.querySelector('.select-package');
+      if (selectButton) selectButton.dataset.package = value;
+
+      let badge = basicCard.querySelector('.basic-promo-badge');
+      let note = basicCard.querySelector('.basic-promo-note');
+      if (active) {
+        if (!badge) {
+          badge = document.createElement('div');
+          badge.className = 'basic-promo-badge';
+          badge.textContent = 'Sep–Oct 2026 Promo';
+          basicCard.querySelector('.package-body')?.prepend(badge);
+        }
+        if (!note) {
+          note = document.createElement('p');
+          note.className = 'basic-promo-note';
+          note.innerHTML = '<s>Normal RM95</s> RM80 for bookings confirmed by 31 October 2026.';
+          basicCard.querySelector('.feature-list')?.insertAdjacentElement('afterend', note);
+        }
+      } else {
+        badge?.remove();
+        note?.remove();
+      }
+    }
+
+    const basicOption = packageOptions.find((button) => button.querySelector('.basic-photo'));
+    if (basicOption) {
+      basicOption.dataset.package = value;
+      const priceText = basicOption.querySelector('b');
+      const smallText = basicOption.querySelector('small');
+      if (priceText) priceText.textContent = money(price);
+      if (smallText) {
+        smallText.textContent = active ? 'Promo · normal RM95' : 'Setup only';
+        smallText.classList.toggle('booking-promo-note', active);
+      }
+    }
+
+    if (packageSelect?.value?.startsWith('Basic Craze')) {
+      packageSelect.value = value;
+      renderPackagePreview(value);
+    }
+
+    updateBasicStructuredData(active, price);
+    updateBasicMeta(active);
+  }
 
   window.addEventListener('scroll', () => {
     header?.classList.toggle('scrolled', window.scrollY > 10);
@@ -161,21 +308,30 @@
         span.textContent = tag;
         return span;
       }));
+
+      if (info.key === 'basic' && basicPromoActive()) {
+        const promoTag = document.createElement('span');
+        promoTag.textContent = 'Sep–Oct promo · normal RM95';
+        bookingPreviewTags.prepend(promoTag);
+      }
     }
 
     if (packageChoiceError) packageChoiceError.textContent = '';
   }
 
   function selectPackage(value, scrollToBooking = false) {
-    if (!packageSelect || !PACKAGE_INFO[value]) return;
-    packageSelect.value = value;
-    renderPackagePreview(value);
+    const normalizedValue = value?.startsWith('Basic Craze') ? currentBasicPackageValue() : value;
+    if (!packageSelect || !PACKAGE_INFO[normalizedValue]) return;
+    packageSelect.value = normalizedValue;
+    renderPackagePreview(normalizedValue);
     updateAddonSummary();
     if (scrollToBooking) {
       document.getElementById('booking')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
       setTimeout(() => customerName?.focus(), 450);
     }
   }
+
+  applyBasicPricingUI();
 
   packageOptions.forEach((button) => {
     button.addEventListener('click', () => selectPackage(button.dataset.package || ''));
@@ -315,6 +471,15 @@
   bookingForm?.addEventListener('submit', (event) => {
     event.preventDefault();
 
+    if (packageSelect?.value?.startsWith('Basic Craze')) {
+      const latestBasicValue = currentBasicPackageValue();
+      if (packageSelect.value !== latestBasicValue) {
+        packageSelect.value = latestBasicValue;
+        applyBasicPricingUI();
+        renderPackagePreview(latestBasicValue);
+      }
+    }
+
     const pkg = packageSelect?.value || '';
     if (!PACKAGE_INFO[pkg]) {
       if (packageChoiceError) packageChoiceError.textContent = 'Please choose a package first.';
@@ -339,12 +504,14 @@
     const extraSnacks = selected.reduce((sum, item) => sum + item.snacks, 0);
     const addonTotal = selected.reduce((sum, item) => sum + item.price, 0);
     const totalPrice = packageInfo.price + addonTotal;
+    const isBasicPromo = packageInfo.key === 'basic' && basicPromoActive();
 
     const message = [
       'Hi Candy Craze! I would like to enquire about an event booking.',
       '',
       `Name: ${name}`,
       `Package: ${pkg}`,
+      ...(isBasicPromo ? ['Promo: Sep–Oct 2026 Basic Craze promo · normal RM95 · subject to booking confirmation by 31/10/2026'] : []),
       ...(packageInfo.addons ? [
         `Add-ons: ${selected.length ? selected.map((item) => `${item.label} — ${money(item.price)}`).join(', ') : 'None'}`,
         `Final treats: ${packageInfo.candies + extraCandies} candies + ${packageInfo.snacks + extraSnacks} snacks`
