@@ -29,6 +29,28 @@ jobs:
         with:
           ref: candy-craze-website-preview
 
+      - name: Build hosting ZIP
+        shell: bash
+        run: |
+          zip -r Candy-Craze-Hosting.zip \
+            index.html \
+            script.js \
+            styles.css \
+            visual-booking.css \
+            robots.txt \
+            sitemap.xml \
+            favicon.ico \
+            favicon.png \
+            assets
+
+      - name: Upload hosting ZIP artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Candy-Craze-Hosting
+          path: Candy-Craze-Hosting.zip
+          if-no-files-found: error
+          retention-days: 30
+
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
         with:
