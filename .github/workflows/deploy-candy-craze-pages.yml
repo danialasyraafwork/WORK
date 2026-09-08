@@ -24,10 +24,10 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout published site branch
+      - name: Checkout latest Candy Craze site
         uses: actions/checkout@v4
         with:
-          ref: gh-pages
+          ref: candy-craze-website-preview
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
@@ -37,7 +37,7 @@ jobs:
       - name: Upload Candy Craze site
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./candy-craze
+          path: .
 
       - name: Deploy to GitHub Pages
         id: deployment
