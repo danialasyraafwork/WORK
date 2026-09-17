@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en-MY">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#fff7fb">
+  <title>Candy Craze Booking Calendar Demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="booking-calendar-demo.css?v=1">
+</head>
+<body>
+  <header class="demo-header">
+    <div class="shell header-inner">
+      <a class="brand" href="index.html" aria-label="Back to Candy Craze">
+        <span class="brand-mark">CC</span>
+        <span><strong>Candy Craze</strong><small>Booking Calendar Prototype</small></span>
+      </a>
+      <a class="back-link" href="index.html">Back to website</a>
+    </div>
+  </header>
+
+  <main class="shell page-wrap">
+    <section class="intro">
+      <span class="eyebrow">Booking availability</span>
+      <h1>Check your date before you book.</h1>
+      <p>This is a working prototype. Customers only see availability. Admin mode shows the private booking details and lets you change each date.</p>
+    </section>
+
+    <div class="mode-switch" role="tablist" aria-label="Calendar mode">
+      <button class="mode-btn active" type="button" data-mode="public">Customer View</button>
+      <button class="mode-btn" type="button" data-mode="admin">Admin Demo</button>
+    </div>
+
+    <section class="calendar-layout">
+      <div class="calendar-card">
+        <div class="calendar-toolbar">
+          <button class="month-nav" id="prevMonth" type="button" aria-label="Previous month">‹</button>
+          <div>
+            <span class="month-kicker">Availability calendar</span>
+            <h2 id="monthTitle">September 2026</h2>
+          </div>
+          <button class="month-nav" id="nextMonth" type="button" aria-label="Next month">›</button>
+        </div>
+
+        <div class="legend">
+          <span><i class="dot available"></i> Available</span>
+          <span><i class="dot pending"></i> Pending</span>
+          <span><i class="dot booked"></i> Booked</span>
+          <span><i class="dot unavailable"></i> Unavailable</span>
+        </div>
+
+        <div class="weekdays" aria-hidden="true">
+          <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+        </div>
+        <div class="calendar-grid" id="calendarGrid" aria-live="polite"></div>
+      </div>
+
+      <aside class="side-card public-panel" id="publicPanel">
+        <div class="side-icon">CC</div>
+        <span class="eyebrow">How it works</span>
+        <h3>Pick an available date.</h3>
+        <p>Green dates are open for enquiry. Pending and booked dates are not available for new bookings.</p>
+        <div class="selected-public" id="selectedPublic">
+          <span>Selected date</span>
+          <strong>Choose a green date</strong>
+          <small>We will use this date in your WhatsApp enquiry.</small>
+        </div>
+        <button class="primary-btn" id="whatsappBtn" type="button" disabled>Enquire on WhatsApp</button>
+        <p class="privacy-note">Customer view never shows names, phone numbers or private booking notes.</p>
+      </aside>
+
+      <aside class="side-card admin-panel hidden" id="adminPanel">
+        <div class="admin-title-row">
+          <div>
+            <span class="eyebrow">Private admin view</span>
+            <h3 id="adminDateTitle">Select a date</h3>
+          </div>
+          <span class="admin-badge">DEMO</span>
+        </div>
+
+        <form id="bookingForm">
+          <label>Status
+            <select id="bookingStatus">
+              <option value="available">Available</option>
+              <option value="pending">Pending</option>
+              <option value="booked">Booked</option>
+              <option value="unavailable">Unavailable</option>
+            </select>
+          </label>
+          <label>Customer name
+            <input id="customerName" type="text" placeholder="e.g. Aina">
+          </label>
+          <label>Phone
+            <input id="customerPhone" type="tel" placeholder="01X-XXXXXXX">
+          </label>
+          <label>Package
+            <select id="bookingPackage">
+              <option value="">Select package</option>
+              <option>Basic Craze — RM80</option>
+              <option>Standard Craze — RM110</option>
+              <option>Popular Craze — RM260</option>
+              <option>Premium Craze — RM360</option>
+            </select>
+          </label>
+          <div class="form-row">
+            <label>Start time
+              <input id="startTime" type="time">
+            </label>
+            <label>End time
+              <input id="endTime" type="time">
+            </label>
+          </div>
+          <label>Location
+            <input id="bookingLocation" type="text" placeholder="e.g. Skudai, Johor">
+          </label>
+          <label>Deposit
+            <select id="depositStatus">
+              <option value="not-paid">Not paid</option>
+              <option value="pending">Pending</option>
+              <option value="paid">Paid</option>
+            </select>
+          </label>
+          <label>Remarks
+            <textarea id="bookingRemarks" rows="3" placeholder="Theme, setup note, special request..."></textarea>
+          </label>
+          <div class="form-actions">
+            <button class="secondary-btn" id="clearBtn" type="button">Clear date</button>
+            <button class="primary-btn" type="submit">Save booking</button>
+          </div>
+        </form>
+        <p class="privacy-note">Prototype saves data only in this browser using localStorage. No real database is connected yet.</p>
+      </aside>
+    </section>
+
+    <section class="demo-note">
+      <strong>Prototype behaviour</strong>
+      <p>Try switching to Admin Demo, click a date, mark it Booked, save it, then switch back to Customer View. The customer calendar will immediately show that date as booked without exposing private details.</p>
+    </section>
+  </main>
+
+  <script src="booking-calendar-demo.js?v=1"></script>
+</body>
+</html>
