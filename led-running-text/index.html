@@ -27,7 +27,7 @@ select{width:100%;background:#090a0c;color:#fff;border:1px solid var(--border);b
 .stage{position:absolute;inset:0;overflow:hidden;display:flex;align-items:center;background:#000}
 .ticker{position:absolute;left:100vw;white-space:nowrap;line-height:1;font-weight:900;letter-spacing:.04em;will-change:transform;animation:scroll 10s linear infinite}
 .ticker.dot{font-family:"SFMono-Regular",Consolas,Menlo,monospace;text-shadow:0 0 4px currentColor,0 0 12px currentColor,0 0 28px currentColor}.ticker.clean{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;text-shadow:0 0 14px currentColor}.ticker.noglow{text-shadow:none}
-@keyframes scroll{from{transform:translateX(0)}to{transform:translateX(calc(-100% - 100vw))}}.ticker.reverse{left:auto;right:100vw;animation-name:scrollReverse}@keyframes scrollReverse{from{transform:translateX(0)}to{transform:translateX(calc(100% + 100vw))}}
+@keyframes scroll{from{transform:translateX(0)}to{transform:translateX(calc(-100% - 100vw))}}.ticker.reverse{left:auto;right:100vw;animation-name:scrollReverse}@keyframes scrollReverse{from{transform:translateX(0)}to{transform:translateX(calc(100% + 100vw))}}.ticker.vertical{left:50%;right:auto;top:0;animation-name:scrollDown}@keyframes scrollDown{from{transform:translate(-50%,-130%)}to{transform:translate(-50%,calc(100vh + 130%))}}
 .controls{position:absolute;top:max(10px,env(safe-area-inset-top));right:max(10px,env(safe-area-inset-right));display:flex;gap:8px;opacity:.15;transition:.2s}#display.showctrl .controls{opacity:1}
 .round{min-width:44px;height:44px;padding:0 12px;border-radius:22px;border:1px solid #ffffff40;background:#141414c9;color:#fff;font-weight:700;backdrop-filter:blur(10px)}
 .hint{display:none;position:absolute;bottom:max(18px,env(safe-area-inset-bottom));left:0;right:0;text-align:center;color:#888;font-size:12px}
@@ -37,7 +37,7 @@ select{width:100%;background:#090a0c;color:#fff;border:1px solid var(--border);b
 <body>
 <main class="app">
 <div class="shell">
-<div class="head"><h1>LED Running Text</h1><div class="sub">Type text → DISPLAY → rotate iPhone landscape.</div></div>
+<div class="head"><h1>LED Running Text</h1><div class="sub">Type text → DISPLAY. Tap Rotate untuk gerak atas → bawah.</div></div>
 <section class="card">
 <label for="msg">Message</label>
 <textarea id="msg" maxlength="300">WELCOME • OPEN 24 HOURS • THANK YOU</textarea>
@@ -60,14 +60,14 @@ select{width:100%;background:#090a0c;color:#fff;border:1px solid var(--border);b
 
 <section id="display">
 <div class="stage"><div id="ticker" class="ticker dot">WELCOME</div></div>
-<div class="controls"><button class="round" id="pause">Pause</button><button class="round" id="back">⚙</button></div>
-<div class="hint">Rotate landscape ↻</div>
+<div class="controls"><button class="round" id="rotate">Rotate</button><button class="round" id="pause">Pause</button><button class="round" id="back">⚙</button></div>
+<div class="hint">Tap Rotate untuk tukar horizontal ↔ vertical</div>
 </section>
 
 <script>
 (()=>{
 const $=id=>document.getElementById(id),msg=$('msg'),speed=$('speed'),size=$('size'),speedVal=$('speedVal'),sizeVal=$('sizeVal'),style=$('style'),glow=$('glow'),awake=$('awake'),color=$('color'),swatches=$('swatches'),display=$('display'),ticker=$('ticker'),left=$('left'),right=$('right');
-let direction='left',wakeLock=null,paused=false,timer=null;
+let direction='left',vertical=false,wakeLock=null,paused=false,timer=null;
 const defaults={message:'WELCOME • OPEN 24 HOURS • THANK YOU',speed:'10',size:'150',direction:'left',style:'dot',color:'#ff2b2b',glow:true,awake:true};
 function save(){localStorage.setItem('ledtext',JSON.stringify({message:msg.value,speed:speed.value,size:size.value,direction,style:style.value,color:color.value,glow:glow.checked,awake:awake.checked}))}
 function labels(){speedVal.textContent=Number(speed.value).toFixed(1)+'s';sizeVal.textContent=size.value+'px'}
@@ -77,8 +77,10 @@ function load(){try{const s={...defaults,...JSON.parse(localStorage.getItem('led
 async function lock(){if(!awake.checked||!('wakeLock'in navigator))return;try{wakeLock=await navigator.wakeLock.request('screen')}catch(e){}}
 async function unlock(){try{if(wakeLock){await wakeLock.release();wakeLock=null}}catch(e){}}
 function ctrl(){display.classList.add('showctrl');clearTimeout(timer);timer=setTimeout(()=>display.classList.remove('showctrl'),1800)}
-$('show').onclick=()=>{ticker.textContent=msg.value.trim()||' ';ticker.style.animationDuration=speed.value+'s';ticker.style.fontSize=size.value+'px';ticker.style.color=color.value;ticker.className='ticker '+style.value+(direction==='right'?' reverse':'')+(!glow.checked?' noglow':'');ticker.style.animation='none';void ticker.offsetWidth;ticker.style.animation='';display.classList.add('active');document.body.style.overflow='hidden';paused=false;$('pause').textContent='Pause';save();lock();ctrl()}
+function applyTickerMode(){ticker.className='ticker '+style.value+(vertical?' vertical':(direction==='right'?' reverse':''))+(!glow.checked?' noglow':'');ticker.style.animation='none';void ticker.offsetWidth;ticker.style.animation='';ticker.style.animationDuration=speed.value+'s';ticker.style.animationPlayState=paused?'paused':'running';$('rotate').textContent=vertical?'Horizontal':'Rotate'}
+$('show').onclick=()=>{ticker.textContent=msg.value.trim()||' ';ticker.style.fontSize=size.value+'px';ticker.style.color=color.value;vertical=false;paused=false;applyTickerMode();display.classList.add('active');document.body.style.overflow='hidden';$('pause').textContent='Pause';save();lock();ctrl()}
 $('back').onclick=e=>{e.stopPropagation();display.classList.remove('active','showctrl');document.body.style.overflow='';ticker.style.animationPlayState='running';paused=false;unlock()}
+$('rotate').onclick=e=>{e.stopPropagation();vertical=!vertical;applyTickerMode();ctrl()}
 $('pause').onclick=e=>{e.stopPropagation();paused=!paused;ticker.style.animationPlayState=paused?'paused':'running';$('pause').textContent=paused?'Play':'Pause';ctrl()}
 display.onclick=ctrl;left.onclick=()=>dir('left');right.onclick=()=>dir('right');
 speed.oninput=()=>{labels();save()};size.oninput=()=>{labels();save()};msg.oninput=save;style.onchange=save;glow.onchange=save;awake.onchange=save;
