@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#000000">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>LED Running Text</title>
+<style>
+:root{--bg:#050505;--panel:#111318;--border:#292d35;--muted:#98a1ad;--text:#fff}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+body{min-height:100dvh}.app{min-height:100dvh;padding:max(18px,env(safe-area-inset-top)) max(18px,env(safe-area-inset-right)) max(24px,env(safe-area-inset-bottom)) max(18px,env(safe-area-inset-left));display:flex;justify-content:center}
+.shell{width:min(760px,100%);margin:auto}.head{margin-bottom:18px}h1{font-size:25px;margin:0}.sub{margin-top:5px;color:var(--muted);font-size:14px}
+.card{background:linear-gradient(180deg,#12151a,#0d0f13);border:1px solid var(--border);border-radius:20px;padding:16px;box-shadow:0 20px 60px #0008}
+label{display:block;font-size:13px;color:#cbd2db;margin:0 0 8px}textarea{width:100%;min-height:100px;resize:vertical;border-radius:14px;border:1px solid var(--border);background:#08090b;color:#fff;padding:14px;font:inherit;font-size:20px;outline:none}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}.field{background:#171a20;border:1px solid var(--border);border-radius:14px;padding:12px}.full{grid-column:1/-1}
+.row{display:flex;align-items:center;gap:10px}.space{justify-content:space-between}.val{font-size:13px;color:#fff;font-variant-numeric:tabular-nums}
+input[type=range]{width:100%;accent-color:white}input[type=color]{width:48px;height:38px;border:0;background:transparent;padding:0}.seg{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+button,select{font:inherit}.seg button,.secondary{border:1px solid var(--border);background:#0b0c0f;color:#ddd;border-radius:10px;padding:10px}.seg button.active{background:#fff;color:#000;border-color:#fff;font-weight:800}
+select{width:100%;background:#090a0c;color:#fff;border:1px solid var(--border);border-radius:10px;padding:10px}
+.swatches{display:flex;gap:8px;flex-wrap:wrap}.swatch{width:34px;height:34px;border-radius:50%;border:2px solid #ffffff2c;padding:0}.swatch.active{outline:2px solid white;outline-offset:2px}
+.toggle{display:flex;align-items:center;justify-content:space-between;gap:10px}.toggle input{width:22px;height:22px;accent-color:#fff}.actions{display:grid;grid-template-columns:1fr auto;gap:10px;margin-top:14px}
+.primary{border:0;border-radius:14px;padding:15px 18px;background:#fff;color:#000;font-weight:900;font-size:17px}.secondary{border-radius:14px;padding:15px 18px;font-weight:700}
+.tip{color:var(--muted);font-size:12px;line-height:1.45;margin:12px 2px 0}
+#display{position:fixed;inset:0;background:#000;z-index:9999;display:none;overflow:hidden;user-select:none;-webkit-user-select:none}#display.active{display:block}
+.stage{position:absolute;inset:0;overflow:hidden;display:flex;align-items:center;background:#000}
+.ticker{position:absolute;left:100vw;white-space:nowrap;line-height:1;font-weight:900;letter-spacing:.04em;will-change:transform;animation:scroll 10s linear infinite}
+.ticker.dot{font-family:"SFMono-Regular",Consolas,Menlo,monospace;text-shadow:0 0 4px currentColor,0 0 12px currentColor,0 0 28px currentColor}.ticker.clean{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;text-shadow:0 0 14px currentColor}.ticker.noglow{text-shadow:none}
+@keyframes scroll{from{transform:translateX(0)}to{transform:translateX(calc(-100% - 100vw))}}.ticker.reverse{left:auto;right:100vw;animation-name:scrollReverse}@keyframes scrollReverse{from{transform:translateX(0)}to{transform:translateX(calc(100% + 100vw))}}
+.controls{position:absolute;top:max(10px,env(safe-area-inset-top));right:max(10px,env(safe-area-inset-right));display:flex;gap:8px;opacity:.15;transition:.2s}#display.showctrl .controls{opacity:1}
+.round{min-width:44px;height:44px;padding:0 12px;border-radius:22px;border:1px solid #ffffff40;background:#141414c9;color:#fff;font-weight:700;backdrop-filter:blur(10px)}
+.hint{display:none;position:absolute;bottom:max(18px,env(safe-area-inset-bottom));left:0;right:0;text-align:center;color:#888;font-size:12px}
+@media(orientation:portrait){.hint{display:block}}@media(max-width:620px){.grid{grid-template-columns:1fr}.full{grid-column:auto}.actions{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<main class="app">
+<div class="shell">
+<div class="head"><h1>LED Running Text</h1><div class="sub">Type text → DISPLAY → rotate iPhone landscape.</div></div>
+<section class="card">
+<label for="msg">Message</label>
+<textarea id="msg" maxlength="300">WELCOME • OPEN 24 HOURS • THANK YOU</textarea>
+<div class="grid">
+<div class="field full"><div class="row space"><label style="margin:0">Speed</label><span class="val" id="speedVal">10.0s</span></div><input id="speed" type="range" min="3" max="30" step=".5" value="10"></div>
+<div class="field full"><div class="row space"><label style="margin:0">Text size</label><span class="val" id="sizeVal">150px</span></div><input id="size" type="range" min="50" max="300" step="5" value="150"></div>
+<div class="field"><label>Direction</label><div class="seg"><button id="left" class="active" type="button">← Left</button><button id="right" type="button">Right →</button></div></div>
+<div class="field"><label>Style</label><select id="style"><option value="dot">LED / Matrix</option><option value="clean">Clean Bold</option></select></div>
+<div class="field full"><label>LED color</label><div class="row"><div class="swatches" id="swatches">
+<button class="swatch active" data-color="#ff2b2b" style="background:#ff2b2b"></button><button class="swatch" data-color="#29ff64" style="background:#29ff64"></button><button class="swatch" data-color="#22a7ff" style="background:#22a7ff"></button><button class="swatch" data-color="#ffd22e" style="background:#ffd22e"></button><button class="swatch" data-color="#ffffff" style="background:#fff"></button><button class="swatch" data-color="#ff4df0" style="background:#ff4df0"></button>
+</div><input id="color" type="color" value="#ff2b2b"></div></div>
+<div class="field"><div class="toggle"><div><label style="margin:0 0 4px">LED glow</label><div class="val">Neon effect</div></div><input id="glow" type="checkbox" checked></div></div>
+<div class="field"><div class="toggle"><div><label style="margin:0 0 4px">Keep awake</label><div class="val">When supported</div></div><input id="awake" type="checkbox" checked></div></div>
+</div>
+<div class="actions"><button class="primary" id="show" type="button">▶ DISPLAY</button><button class="secondary" id="reset" type="button">Reset</button></div>
+<p class="tip">Tip: Safari → Share → Add to Home Screen untuk rasa macam app.</p>
+</section>
+</div>
+</main>
+
+<section id="display">
+<div class="stage"><div id="ticker" class="ticker dot">WELCOME</div></div>
+<div class="controls"><button class="round" id="pause">Pause</button><button class="round" id="back">⚙</button></div>
+<div class="hint">Rotate landscape ↻</div>
+</section>
+
+<script>
+(()=>{
+const $=id=>document.getElementById(id),msg=$('msg'),speed=$('speed'),size=$('size'),speedVal=$('speedVal'),sizeVal=$('sizeVal'),style=$('style'),glow=$('glow'),awake=$('awake'),color=$('color'),swatches=$('swatches'),display=$('display'),ticker=$('ticker'),left=$('left'),right=$('right');
+let direction='left',wakeLock=null,paused=false,timer=null;
+const defaults={message:'WELCOME • OPEN 24 HOURS • THANK YOU',speed:'10',size:'150',direction:'left',style:'dot',color:'#ff2b2b',glow:true,awake:true};
+function save(){localStorage.setItem('ledtext',JSON.stringify({message:msg.value,speed:speed.value,size:size.value,direction,style:style.value,color:color.value,glow:glow.checked,awake:awake.checked}))}
+function labels(){speedVal.textContent=Number(speed.value).toFixed(1)+'s';sizeVal.textContent=size.value+'px'}
+function dir(v){direction=v;left.classList.toggle('active',v==='left');right.classList.toggle('active',v==='right');save()}
+function swatch(v){[...swatches.querySelectorAll('.swatch')].forEach(b=>b.classList.toggle('active',b.dataset.color.toLowerCase()===v.toLowerCase()))}
+function load(){try{const s={...defaults,...JSON.parse(localStorage.getItem('ledtext')||'{}')};msg.value=s.message;speed.value=s.speed;size.value=s.size;style.value=s.style;color.value=s.color;glow.checked=!!s.glow;awake.checked=!!s.awake;dir(s.direction);swatch(s.color);labels()}catch(e){}}
+async function lock(){if(!awake.checked||!('wakeLock'in navigator))return;try{wakeLock=await navigator.wakeLock.request('screen')}catch(e){}}
+async function unlock(){try{if(wakeLock){await wakeLock.release();wakeLock=null}}catch(e){}}
+function ctrl(){display.classList.add('showctrl');clearTimeout(timer);timer=setTimeout(()=>display.classList.remove('showctrl'),1800)}
+$('show').onclick=()=>{ticker.textContent=msg.value.trim()||' ';ticker.style.animationDuration=speed.value+'s';ticker.style.fontSize=size.value+'px';ticker.style.color=color.value;ticker.className='ticker '+style.value+(direction==='right'?' reverse':'')+(!glow.checked?' noglow':'');ticker.style.animation='none';void ticker.offsetWidth;ticker.style.animation='';display.classList.add('active');document.body.style.overflow='hidden';paused=false;$('pause').textContent='Pause';save();lock();ctrl()}
+$('back').onclick=e=>{e.stopPropagation();display.classList.remove('active','showctrl');document.body.style.overflow='';ticker.style.animationPlayState='running';paused=false;unlock()}
+$('pause').onclick=e=>{e.stopPropagation();paused=!paused;ticker.style.animationPlayState=paused?'paused':'running';$('pause').textContent=paused?'Play':'Pause';ctrl()}
+display.onclick=ctrl;left.onclick=()=>dir('left');right.onclick=()=>dir('right');
+speed.oninput=()=>{labels();save()};size.oninput=()=>{labels();save()};msg.oninput=save;style.onchange=save;glow.onchange=save;awake.onchange=save;
+swatches.onclick=e=>{const b=e.target.closest('.swatch');if(!b)return;color.value=b.dataset.color;swatch(b.dataset.color);save()};color.oninput=()=>{swatch(color.value);save()};
+$('reset').onclick=()=>{localStorage.removeItem('ledtext');msg.value=defaults.message;speed.value=defaults.speed;size.value=defaults.size;style.value=defaults.style;color.value=defaults.color;glow.checked=true;awake.checked=true;dir('left');swatch(defaults.color);labels();save()};
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&display.classList.contains('active'))lock()});load();
+})();
+</script>
+</body>
+</html>
