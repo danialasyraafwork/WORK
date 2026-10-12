@@ -1,3 +1,8 @@
+const brandTheme=document.createElement('link');
+brandTheme.rel='stylesheet';
+brandTheme.href='theme.css?v=20261012-navy';
+document.head.appendChild(brandTheme);
+
 const menuBtn=document.querySelector('.menu-btn');
 const nav=document.querySelector('.nav');
 const header=document.querySelector('.site-header');
