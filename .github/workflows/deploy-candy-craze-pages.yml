@@ -91,4 +91,4 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
 
-# DANS v2 preview refresh: monochrome brand palette + sales email
+# DANS v2.1 preview refresh: selected work + visual polish
