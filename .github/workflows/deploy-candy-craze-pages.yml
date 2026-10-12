@@ -42,6 +42,19 @@ jobs:
           cp -a _dans_source/DANS-Global-Empire ./DANS-Global-Empire
           rm -rf _dans_source
 
+      - name: Checkout DANS Global Empire v2 preview
+        uses: actions/checkout@v4
+        with:
+          ref: dans-global-empire-v2-preview
+          path: _dans_v2_source
+
+      - name: Add DANS Global Empire v2 preview
+        shell: bash
+        run: |
+          rm -rf DANS-Global-Empire-v2
+          cp -a _dans_v2_source/DANS-Global-Empire-v2 ./DANS-Global-Empire-v2
+          rm -rf _dans_v2_source
+
       - name: Build hosting ZIP
         shell: bash
         run: |
