@@ -1,0 +1,199 @@
+/* Global Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Ensure body takes up at least the full viewport height */
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px; /* Ensure container doesn't exceed a maximum width */
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Header Styles */
+header {
+    background-color: #0e319a;
+    color: #fff;
+    padding: 10px 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Adjust shadow for subtle effect */
+}
+
+.logo {
+    text-align: center;
+    font-size: 40px;
+}
+
+.nav-links {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    justify-content: center; /* Center align the navigation links */
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+}
+
+.nav-links li {
+    margin-right: 20px;
+}
+
+.nav-links li:last-child {
+    margin-right: 0;
+}
+
+.nav-links li a {
+    text-decoration: none;
+    color: #fff;
+    padding: 8px 15px;
+    border-radius: 5px;
+}
+
+.nav-links li a:hover {
+    background-color: #142b70; /* Change background color on hover */
+}
+
+/* Hero Styles */
+.hero {
+    background-image: url('hero-image.jpg');
+    background-size: cover;
+    color: #fff;
+    text-align: center;
+    padding: 100px 10px;
+    display: flex; /* Use flexbox to center content */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    flex-wrap: wrap; /* Allow items to wrap onto multiple lines */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Adjust shadow for subtle effect */
+}
+
+.hero img {
+    max-width: 100%; /* Ensure images fit the width of their container */
+    height: auto; /* Maintain aspect ratio */
+    margin: 10px; /* Add some space around each image */
+    border: 2px solid #fff; /* Add border to each image */
+    border-radius: 8px; /* Add border radius for rounded corners */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Adjust shadow for subtle effect */
+}
+
+/* Content Styles */
+.content {
+    margin-top: -130px; /* Adjust this value as needed */
+}
+
+.content ul li strong {
+    font-weight: bold; /* Make the text bold */
+    font-size: 18px; /* Adjust the font size as needed */
+}
+
+/* WhatsApp Button */
+.whatsapp-toggle {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999;
+}
+
+.whatsapp-btn {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #25D366; /* Adjusted to match WhatsApp color */
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.whatsapp-btn:hover {
+  background-color: #128C7E; /* Darker shade for hover effect */
+}
+
+/* Products Section */
+.product {
+    border: 2px solid #ccc; /* Add a solid border with a color */
+    padding: 20px; /* Add padding to create space between the content and the border */
+    margin-bottom: 20px; /* Add margin to separate each product */
+    border-radius: 8px; /* Add border radius for rounded corners */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add shadow for subtle effect */
+}
+
+.products {
+    text-align: center; /* Center the content horizontally */
+    padding: 50px 0; /* Add some vertical padding for spacing */
+}
+
+.products .container {
+    display: inline-block; /* Ensure the container only takes the necessary width */
+    text-align: left; /* Reset text alignment to left within the container */
+}
+
+/* Service Images */
+.service-image {
+    border: 2px solid #ccc;
+    margin: 10px;
+    padding: 5px;
+    max-width: 100%; /* Make sure image fits within container */
+    border-radius: 8px; /* Add border radius for rounded corners */
+}
+
+/* Services Section */
+.services ul {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    list-style-type: none;
+    padding: 0;
+}
+
+.services ul li {
+    text-align: center;
+    margin: 20px;
+    border: 2px solid #ccc; /* Add border to each list of services */
+    padding: 10px; /* Add padding to space out content */
+    border-radius: 8px; /* Add border radius for rounded corners */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add shadow for subtle effect */
+}
+
+/* Move the Our Services heading a bit to the right */
+.services h2 {
+    margin-left: 20px; /* Adjust this value as needed */
+}
+
+/* Footer Styles */
+footer {
+    background-color: #142b70;
+    color: #fff;
+    text-align: center;
+    padding: 20px 10px;
+    margin-top: auto; /* Push the footer to the bottom */
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1); /* Adjust shadow for subtle effect */
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .nav-links {
+        flex-direction: column;
+    }
+    
+    .nav-links li {
+        margin: 10px 0;
+    }
+    
+    .hero {
+        padding: 50px 10px; /* Adjust padding for smaller screens */
+    }
+    
+    .hero img {
+        margin-top: 0; /* Remove negative margin on smaller screens */
+    }
+    
+    .content {
+        margin-top: 0; /* Adjust margin for smaller screens */
+    }
+    
+    .services ul li {
+        margin: 10px; /* Reduce margin on smaller screens */
+    }
+}
