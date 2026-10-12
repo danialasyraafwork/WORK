@@ -29,6 +29,19 @@ jobs:
         with:
           ref: candy-craze-website-preview
 
+      - name: Checkout DANS Global Empire site
+        uses: actions/checkout@v4
+        with:
+          ref: dans-global-empire-website
+          path: _dans_source
+
+      - name: Add DANS Global Empire preview
+        shell: bash
+        run: |
+          rm -rf DANS-Global-Empire
+          cp -a _dans_source/DANS-Global-Empire ./DANS-Global-Empire
+          rm -rf _dans_source
+
       - name: Build hosting ZIP
         shell: bash
         run: |
