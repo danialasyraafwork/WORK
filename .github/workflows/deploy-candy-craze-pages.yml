@@ -91,4 +91,4 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
 
-# DANS v2.1 preview refresh: selected work + visual polish
+# DANS v2.1 preview refresh: navy brand palette from favicon
